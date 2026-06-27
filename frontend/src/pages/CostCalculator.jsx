@@ -264,7 +264,7 @@ export default function CostCalculator() {
     <div data-testid="cost-calculator-page">
       <Navbar />
       <section className="hero-gradient grain">
-        <div className="max-w-5xl mx-auto px-5 lg:px-8 pt-10 lg:pt-14 pb-10 text-center">
+        <div className="max-w-5xl mx-auto px-5 lg:px-8 pt-3 lg:pt-6 pb-9 text-center">
           <div className="flex items-center gap-2 fade-up justify-center">
             <Sparkles className="h-4 w-4 brand-bronze" />
             <span className="text-xs uppercase tracking-[0.22em] text-slate-600 font-semibold">Cost Calculator</span>

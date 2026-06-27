@@ -30,7 +30,7 @@ function RotatingKeywords() {
   }, []);
   return (
     <div className="py-7 bg-white border-b border-slate-200/70">
-      <div className="max-w-[1200px] mx-auto px-5 lg:px-8 flex items-center justify-center gap-3 flex-wrap">
+      <div className="max-w-[1480px] mx-auto px-5 lg:px-8 flex items-center justify-center gap-3 flex-wrap">
         <span className="text-[10px] uppercase tracking-[0.22em] font-bold text-slate-500 shrink-0">We help with</span>
         <div className="h-7 overflow-hidden flex items-center">
           <div className="transition-transform duration-700 will-change-transform" style={{ transform: `translateY(-${idx * 28}px)` }}>
@@ -51,7 +51,7 @@ function FounderClubBanner() {
   const navigate = useNavigate();
   return (
     <div className="py-8 bg-gradient-to-br from-[#0F2A2A] to-[#13433f]">
-      <div className="max-w-[1200px] mx-auto px-5 lg:px-8">
+      <div className="max-w-[1480px] mx-auto px-5 lg:px-8">
         <button
           type="button"
           onClick={() => navigate('/founder-club')}
@@ -86,7 +86,7 @@ function TrustMarquee() {
   const items = ['IFZA', 'Meydan', 'SHAMS', 'SPC', 'RAKEZ', 'ANCFZ', 'JAFZA', 'DMCC', 'KIZAD', 'TECOM', 'DAFZA', 'DIFC', 'ADGM', 'Masdar City', 'Hamriyah FZ'];
   return (
     <div className="py-10 bg-[#F8F3E8] overflow-hidden border-y border-emerald-900/5">
-      <div className="max-w-[1200px] mx-auto px-5 lg:px-8 flex items-center gap-6 flex-col lg:flex-row">
+      <div className="max-w-[1480px] mx-auto px-5 lg:px-8 flex items-center gap-6 flex-col lg:flex-row">
         <div className="flex items-center gap-2 text-[11px] uppercase tracking-[0.22em] font-semibold text-slate-600 shrink-0">
           <Sparkles className="h-3.5 w-3.5 brand-bronze" />
           Working alongside 40+ jurisdictions

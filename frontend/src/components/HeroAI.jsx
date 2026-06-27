@@ -83,27 +83,27 @@ export default function HeroAI() {
 
   return (
     <>
-      <section className="relative overflow-hidden pt-10 pb-14 lg:pt-14 lg:pb-16">
+      <section className="relative overflow-hidden pt-3 pb-12 lg:pt-6 lg:pb-14 hero-gradient">
         <div className="absolute inset-0 pointer-events-none opacity-60">
           <div className="absolute -top-20 -right-32 w-[700px] h-[700px] rounded-full bg-emerald-200/30 blur-3xl" />
           <div className="absolute top-40 -left-20 w-[500px] h-[500px] rounded-full bg-amber-200/25 blur-3xl" />
         </div>
 
-        <div className="relative max-w-[1380px] mx-auto px-5 lg:px-8 grid lg:grid-cols-[1.35fr_1fr] gap-10 lg:gap-12 items-start">
+        <div className="relative max-w-[1480px] mx-auto px-5 lg:px-8 grid lg:grid-cols-[1.4fr_1fr] gap-10 lg:gap-12 items-start">
           {/* LEFT — headline + search */}
           <div>
-            <div className="flex mb-5">
+            <div className="flex mb-4">
               <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-700/8 border border-emerald-700/15 text-emerald-800 text-[11.5px] font-bold uppercase tracking-[0.18em]">
                 <span className="h-1.5 w-1.5 rounded-full bg-emerald-600 animate-pulse" />
-                UAE&apos;s Only AI Concierge for Founders · Trusted by Founders
+                UAE&apos;s First AI Concierge for Founders · Built by a founder, for founders
               </div>
             </div>
 
-            <h1 className="font-display font-bold tracking-tight text-slate-900" style={{ fontSize: 'clamp(2.8rem, 6vw, 5.6rem)', lineHeight: 0.98 }} data-testid="home-hero-headline">
+            <h1 className="font-display font-bold tracking-tight text-slate-900" style={{ fontSize: 'clamp(2.4rem, 5vw, 4.6rem)', lineHeight: 1.02 }} data-testid="home-hero-headline">
               Open a Company in <span className="brand-emerald">Dubai &amp; UAE</span> — <span className="brand-bronze italic">compare 40+ free zones</span> in 30 seconds.
             </h1>
 
-            <p className="text-slate-700 max-w-2xl mt-7" style={{ fontSize: 'clamp(1.125rem, 1.4vw, 1.375rem)', lineHeight: 1.5 }}>
+            <p className="text-slate-700 max-w-2xl mt-5" style={{ fontSize: 'clamp(1rem, 1.2vw, 1.2rem)', lineHeight: 1.55 }}>
               Aria, our AI concierge, compares every UAE jurisdiction on
               <b className="text-slate-900"> cost · setup speed · visa quota · activities</b>.
               Get a personalised match for <b>cheapest free zone licence</b>, <b>mainland trade licence</b>,
@@ -150,16 +150,16 @@ export default function HeroAI() {
                 </div>
               )}
 
-              <div className="mt-4 flex items-center justify-between flex-wrap gap-2">
-                <div className="flex items-center gap-1.5 flex-wrap">
-                  <span className="text-[11px] text-slate-500 uppercase tracking-wider font-semibold mr-1">Try:</span>
-                  {['Software Development', 'Gold Trading', 'E-Commerce', 'Restaurant', 'Consultancy'].map((s) => (
-                    <button key={s} onClick={() => { setQ(s); setTimeout(() => submit(s), 100); }} className="text-[11.5px] px-2.5 py-1 rounded-full bg-white border border-slate-200 text-slate-700 hover:border-emerald-700 hover:brand-emerald transition-colors">
+              <div className="mt-5 flex items-center justify-between flex-wrap gap-3">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="text-[12px] text-slate-500 uppercase tracking-wider font-semibold mr-1">Popular searches:</span>
+                  {['Software Development', 'Gold Trading', 'E-Commerce', 'Restaurant', 'Consultancy', 'Crypto / Web3'].map((s) => (
+                    <button key={s} onClick={() => { setQ(s); setTimeout(() => submit(s), 100); }} className="text-[13px] px-3.5 py-1.5 rounded-full bg-white border border-slate-200 text-slate-700 hover:border-emerald-700 hover:brand-emerald hover:bg-emerald-50/40 transition-colors font-medium">
                       {s}
                     </button>
                   ))}
                 </div>
-                <button onClick={() => setAdvancedOpen((o) => !o)} className="text-[12px] font-semibold brand-emerald inline-flex items-center gap-1 hover:underline" data-testid="home-hero-advanced">
+                <button onClick={() => setAdvancedOpen((o) => !o)} className="text-[13px] font-semibold brand-emerald inline-flex items-center gap-1 hover:underline" data-testid="home-hero-advanced">
                   {advancedOpen ? 'Hide' : 'Advanced filters'} <ChevronDown className={`h-3.5 w-3.5 transition-transform ${advancedOpen ? 'rotate-180' : ''}`} />
                 </button>
               </div>
@@ -186,11 +186,11 @@ export default function HeroAI() {
               )}
             </div>
 
-            <div className="mt-7 flex items-center flex-wrap gap-x-6 gap-y-2 text-[12px] text-slate-600">
-              <span className="inline-flex items-center gap-1.5"><span className="h-1.5 w-1.5 rounded-full bg-emerald-600" /> Free to use</span>
-              <span className="inline-flex items-center gap-1.5"><span className="h-1.5 w-1.5 rounded-full bg-emerald-600" /> No sign-up required</span>
-              <span className="inline-flex items-center gap-1.5"><span className="h-1.5 w-1.5 rounded-full bg-emerald-600" /> Results in 30 seconds</span>
-              <span className="inline-flex items-center gap-1.5"><ShieldCheck className="h-3.5 w-3.5 text-emerald-700" /> Axiscrest-Global FZE LLC</span>
+            <div className="mt-7 flex items-center flex-wrap gap-x-6 gap-y-2 text-[13px] text-slate-600">
+              <span className="inline-flex items-center gap-1.5"><span className="h-1.5 w-1.5 rounded-full bg-emerald-600" /> Zero commission from any freezone</span>
+              <span className="inline-flex items-center gap-1.5"><span className="h-1.5 w-1.5 rounded-full bg-emerald-600" /> Official UAE government pricing</span>
+              <span className="inline-flex items-center gap-1.5"><span className="h-1.5 w-1.5 rounded-full bg-emerald-600" /> Free for the first 500 founders</span>
+              <span className="inline-flex items-center gap-1.5"><ShieldCheck className="h-3.5 w-3.5 text-emerald-700" /> Axiscrest-Global FZE LLC · Lic 262843696888</span>
             </div>
 
             <div className="mt-9 grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5">
@@ -248,7 +248,7 @@ export default function HeroAI() {
 
       {/* POPULAR ZONES STRIP */}
       <section className="py-14 lg:py-20 bg-white border-y border-slate-200/70">
-        <div className="max-w-[1200px] mx-auto px-5 lg:px-8">
+        <div className="max-w-[1480px] mx-auto px-5 lg:px-8">
           <div className="flex items-end justify-between flex-wrap gap-3 mb-6">
             <div>
               <div className="text-[11px] uppercase tracking-[0.22em] text-emerald-700 font-bold">Popular Jurisdictions</div>
@@ -321,10 +321,10 @@ export default function HeroAI() {
 
 function Stat({ icon, value, label }) {
   return (
-    <div className="rounded-2xl bg-white border border-slate-200 p-4 lg:p-5 text-center hover:border-emerald-700/30 hover:shadow-lg transition-all">
-      <div className="inline-grid place-items-center h-10 w-10 rounded-xl bg-emerald-50 brand-emerald mb-2 mx-auto">{icon}</div>
-      <div className="font-display text-xl lg:text-2xl font-bold text-slate-900 tabular-nums">{value}</div>
-      <div className="text-[11px] uppercase tracking-wider text-slate-500 font-semibold mt-0.5">{label}</div>
+    <div className="rounded-2xl bg-white border border-slate-200 p-5 lg:p-6 text-center hover:border-emerald-700/30 hover:shadow-lg transition-all">
+      <div className="inline-grid place-items-center h-12 w-12 rounded-xl bg-emerald-50 brand-emerald mb-3 mx-auto">{icon}</div>
+      <div className="font-display text-2xl lg:text-[1.85rem] font-bold text-slate-900 tabular-nums leading-none">{value}</div>
+      <div className="text-[12px] uppercase tracking-wider text-slate-500 font-semibold mt-1.5">{label}</div>
     </div>
   );
 }

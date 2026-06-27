@@ -120,7 +120,7 @@ export default function HeroPreview() {
           <div className="absolute top-40 -left-20 w-[500px] h-[500px] rounded-full bg-amber-200/25 blur-3xl" />
         </div>
 
-        <div className="relative max-w-[1200px] mx-auto px-5 lg:px-8">
+        <div className="relative max-w-[1480px] mx-auto px-5 lg:px-8">
           {/* Eyebrow */}
           <div className="flex justify-center mb-5 fade-up">
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-700/8 border border-emerald-700/15 text-emerald-800 text-[11.5px] font-bold uppercase tracking-[0.18em]">
@@ -253,7 +253,7 @@ export default function HeroPreview() {
 
       {/* POPULAR ZONES STRIP */}
       <section className="py-14 lg:py-20 bg-white border-y border-slate-200/70">
-        <div className="max-w-[1200px] mx-auto px-5 lg:px-8">
+        <div className="max-w-[1480px] mx-auto px-5 lg:px-8">
           <div className="flex items-end justify-between flex-wrap gap-3 mb-6">
             <div>
               <div className="text-[11px] uppercase tracking-[0.22em] text-emerald-700 font-bold">Popular Jurisdictions</div>

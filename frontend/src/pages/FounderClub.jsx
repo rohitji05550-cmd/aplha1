@@ -50,10 +50,12 @@ const COMPARISON = [
 ];
 
 const FAQS = [
-  { q: 'Is the AED 999 a one-time fee?', a: 'Yes. For the first 500 customers, Founder Club membership is a one-time AED 999. After the launch period it becomes AED 1,051 per year.' },
-  { q: 'When do the savings start?', a: 'Immediately. Your renewal discount, service discounts and advisor access activate as soon as your membership is confirmed.' },
+  { q: 'Is the AED 999 a one-time fee?', a: 'Yes. For the first 500 founders, Founder Club membership is a one-time AED 999 — no annual renewal, no hidden top-ups. After the first 500 slots are filled the price becomes AED 1,051 per year.' },
+  { q: 'Is the SmartSetupUAE advisory really free?', a: 'Yes — for the first 500 founders our advisory + setup service fee is AED 0. You only pay the actual government / freezone fee. From the 501st founder onward we add a flat 5% service fee on top of the freezone fee.' },
+  { q: 'Do I pay VAT on top of the service fee?', a: 'UAE VAT (5%) only applies once a business crosses AED 375,000 in taxable supplies in any 12-month window. Below that, no VAT is added to our fee. Once you cross the threshold, our invoice will show the 5% VAT line separately (it is always included in the displayed price for clarity).' },
+  { q: 'When do the savings start?', a: 'Immediately. Your renewal discount, service discounts and dedicated advisor access activate as soon as your membership is confirmed.' },
   { q: 'Can I add Founder Club during checkout?', a: 'Yes. You can add Founder Club as an add-on during any company setup checkout and the discount engine applies automatically.' },
-  { q: 'Is the membership refundable?', a: 'Membership is non-refundable once benefits are used, but you can review full terms on our Refund Policy page.' },
+  { q: 'Is the membership refundable?', a: 'Membership is non-refundable once any benefit (renewal discount, advisor session, partner discount) is used. If you cancel BEFORE activating any benefit we issue a full refund within 7 working days.' },
 ];
 
 export default function FounderClub() {

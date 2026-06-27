@@ -52,7 +52,7 @@ export default function Consultation() {
     <div>
       <Navbar />
       <section className="hero-gradient grain">
-        <div className="max-w-7xl mx-auto px-5 lg:px-8 pt-10 lg:pt-14 pb-12 grid lg:grid-cols-12 gap-12">
+        <div className="max-w-7xl mx-auto px-5 lg:px-8 pt-3 lg:pt-6 pb-10 grid lg:grid-cols-12 gap-12">
           <div className="lg:col-span-6">
             <div className="flex items-center gap-2 fade-up"><Sparkles className="h-4 w-4 brand-bronze" /><span className="text-xs uppercase tracking-[0.22em] text-slate-600 font-semibold">Book a Free Consultation</span></div>
             <h1 className="mt-4 font-display text-5xl lg:text-6xl font-semibold leading-[1.02] text-slate-900 fade-up delay-100">A 30-minute call,<br /><span className="shine-text">zero sales pressure.</span></h1>

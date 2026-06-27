@@ -308,18 +308,51 @@ html[dir="rtl"] [data-testid="ai-search-hero-input"] {
   [data-testid="ai-search-hero-submit"] { padding-left: 14px !important; padding-right: 14px !important; }
 }
 
-/* ---------- Hero spacing — kill the empty gap between navbar and hero
-              so the headline is visible immediately on load ---------- */
-section.hero-gradient {
+/* ────────────────────────────────────────────────────────────────────
+   UNIVERSAL PAGE WIDTH + HERO SPACING — applies to every page so the
+   site never looks "phone-on-desktop". Tight side padding, generous
+   max-width on large viewports.
+   ──────────────────────────────────────────────────────────────────── */
+@media (min-width: 1280px) {
+  .max-w-3xl,
+  .max-w-4xl,
+  .max-w-5xl,
+  .max-w-6xl,
+  .max-w-7xl {
+    max-width: 1480px !important;
+  }
+}
+@media (min-width: 1600px) {
+  .max-w-3xl,
+  .max-w-4xl,
+  .max-w-5xl,
+  .max-w-6xl,
+  .max-w-7xl {
+    max-width: 1640px !important;
+  }
+}
+
+/* Kill the empty gap between navbar and hero on every page. The Navbar is
+   fixed at ~64px; we leave ~10–14px breathing room, no more. */
+section.hero-gradient,
+section.hero-gradient + section {
   padding-top: 0 !important;
 }
 section.hero-gradient > div:first-child {
-  padding-top: 2.2rem !important;
+  padding-top: 0.75rem !important;
 }
 @media (min-width: 1024px) {
   section.hero-gradient > div:first-child {
-    padding-top: 3rem !important;
+    padding-top: 1.25rem !important;
   }
+}
+
+/* Reduce default side padding so the page fills the screen */
+@media (min-width: 1024px) {
+  .px-5.lg\:px-8 { padding-left: 2rem !important; padding-right: 2rem !important; }
+}
+@media (min-width: 1600px) {
+  .px-5.lg\:px-8 { padding-left: 3rem !important; padding-right: 3rem !important; }
 }
 
 /* ---------- Section paddings — tighten so the hero fits in one screen ---------- */

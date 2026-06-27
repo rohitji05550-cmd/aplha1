@@ -115,7 +115,7 @@ export default function ServicePage() {
     <div data-testid={`service-page-${slug}`}>
       <Navbar />
       <section className="hero-gradient grain">
-        <div className="max-w-7xl mx-auto px-5 lg:px-8 pt-10 lg:pt-14 pb-12 grid lg:grid-cols-12 gap-10">
+        <div className="max-w-7xl mx-auto px-5 lg:px-8 pt-3 lg:pt-6 pb-10 grid lg:grid-cols-12 gap-10">
           <div className="lg:col-span-7">
             <span className="text-[11px] uppercase tracking-[0.22em] text-slate-600 font-semibold">{svc.tag}</span>
             <h1 className="mt-4 font-display text-4xl lg:text-6xl font-semibold text-slate-900 leading-[1.05]">{svc.title}</h1>

@@ -82,16 +82,15 @@ export default function GoldenVisa() {
           <div className="absolute -top-32 -right-20 w-[700px] h-[700px] rounded-full bg-[#F0C674]/30 blur-3xl" />
           <div className="absolute -bottom-20 -left-10 w-[500px] h-[500px] rounded-full bg-emerald-500/15 blur-3xl" />
         </div>
-        <div className="relative max-w-[1400px] mx-auto px-5 lg:px-8 py-14 lg:py-20 grid lg:grid-cols-[1.25fr_1fr] gap-10 items-start">
+        <div className="relative max-w-[1480px] mx-auto px-5 lg:px-8 py-8 lg:py-12 grid lg:grid-cols-[1.25fr_1fr] gap-10 items-start">
           <div>
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[#F0C674]/40 bg-[#F0C674]/10 text-[12px] uppercase tracking-[0.22em] font-bold text-[#F0C674]">
-              <Crown className="h-4 w-4" /> Official UAE Government Programme · Updated 2026
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[#F0C674]/40 bg-[#F0C674]/10 text-[11px] uppercase tracking-[0.22em] font-bold text-[#F0C674]">
+              <Crown className="h-3.5 w-3.5" /> Official UAE Government Programme · Updated 2026
             </div>
-            <h1 className="mt-6 font-display font-bold tracking-tight" style={{ fontSize: 'clamp(2.2rem, 4.4vw, 4rem)', lineHeight: 1.05 }}>
-              UAE <span className="italic" style={{ color: '#F0C674' }}>Golden Visa</span><br />
-              10-year residency.<br />No sponsor required.
+            <h1 className="mt-4 font-display font-bold tracking-tight" style={{ fontSize: 'clamp(1.9rem, 3.6vw, 3.2rem)', lineHeight: 1.06 }}>
+              UAE <span className="italic" style={{ color: '#F0C674' }}>Golden Visa</span> — 10-year residency.<br />No sponsor required.
             </h1>
-            <p className="mt-5 text-white/85 max-w-2xl" style={{ fontSize: 'clamp(0.95rem, 1.1vw, 1.125rem)', lineHeight: 1.55 }}>
+            <p className="mt-4 text-white/85 max-w-2xl" style={{ fontSize: 'clamp(0.92rem, 1.05vw, 1.05rem)', lineHeight: 1.55 }}>
               The UAE Golden Visa grants long-term renewable residency to investors, entrepreneurs, specialised talent,
               skilled professionals and outstanding students. In 2026 the programme expanded to include no-property
               pathways for entrepreneurs, talent and high-achieving professionals. Processed by Axiscrest-Global FZE LLC — 500+ Golden Visas filed.
@@ -152,7 +151,7 @@ export default function GoldenVisa() {
 
       {/* 2025 PROPERTY VISA UPDATE */}
       <section className="py-16 bg-white border-y border-slate-200">
-        <div className="max-w-[1280px] mx-auto px-5 lg:px-8 grid lg:grid-cols-[1.1fr_1fr] gap-10 items-center">
+        <div className="max-w-[1480px] mx-auto px-5 lg:px-8 grid lg:grid-cols-[1.1fr_1fr] gap-10 items-center">
           <div>
             <div className="text-[11px] uppercase tracking-[0.22em] font-bold brand-bronze">2026 Policy Update</div>
             <h2 className="mt-3 font-display font-semibold text-slate-900" style={{ fontSize: 'clamp(2rem, 3.6vw, 3rem)', lineHeight: 1.1 }}>
@@ -193,7 +192,7 @@ export default function GoldenVisa() {
 
       {/* ELIGIBILITY CATEGORIES */}
       <section className="py-20 bg-[#FFFCF5]">
-        <div className="max-w-[1380px] mx-auto px-5 lg:px-8">
+        <div className="max-w-[1480px] mx-auto px-5 lg:px-8">
           <div className="text-center max-w-3xl mx-auto">
             <div className="text-[10px] uppercase tracking-[0.22em] font-bold brand-bronze">Eligibility</div>
             <h2 className="mt-2 font-display text-3xl lg:text-5xl font-semibold text-slate-900">Who qualifies for a Golden Visa?</h2>
@@ -224,7 +223,7 @@ export default function GoldenVisa() {
 
       {/* WHAT IT INCLUDES */}
       <section className="py-20 bg-white border-y border-slate-200">
-        <div className="max-w-[1380px] mx-auto px-5 lg:px-8">
+        <div className="max-w-[1480px] mx-auto px-5 lg:px-8">
           <div className="text-center max-w-2xl mx-auto">
             <div className="text-[10px] uppercase tracking-[0.22em] font-bold brand-bronze">Benefits</div>
             <h2 className="mt-2 font-display text-3xl lg:text-5xl font-semibold text-slate-900">What the Golden Visa includes</h2>
@@ -245,7 +244,7 @@ export default function GoldenVisa() {
 
       {/* TIMELINE */}
       <section className="py-20 bg-[#F8F3E8]">
-        <div className="max-w-[1380px] mx-auto px-5 lg:px-8">
+        <div className="max-w-[1480px] mx-auto px-5 lg:px-8">
           <div className="text-center max-w-2xl mx-auto">
             <div className="text-[10px] uppercase tracking-[0.22em] font-bold brand-bronze">Process</div>
             <h2 className="mt-2 font-display text-3xl lg:text-5xl font-semibold text-slate-900">Application process &amp; timeline</h2>
@@ -274,7 +273,7 @@ export default function GoldenVisa() {
 
       {/* FORM */}
       <section className="py-20 bg-[#FFFCF5]" id="eligibility-form">
-        <div className="max-w-[1380px] mx-auto px-5 lg:px-8 grid lg:grid-cols-[1fr_1.15fr] gap-10 items-start">
+        <div className="max-w-[1480px] mx-auto px-5 lg:px-8 grid lg:grid-cols-[1fr_1.15fr] gap-10 items-start">
           <div className="rounded-3xl bg-gradient-to-br from-[#0F2A2A] to-[#13433f] text-white p-9">
             <div className="text-[10px] uppercase tracking-[0.22em] font-bold" style={{ color: '#F0C674' }}>Our Service</div>
             <h2 className="mt-2 font-display text-3xl lg:text-4xl font-semibold">Golden Visa Consulting — AED 4,500</h2>

@@ -92,7 +92,7 @@ export default function Navbar() {
 
   return (
     <header className={`sticky top-0 z-40 transition-all ${scrolled ? 'backdrop-blur-md bg-[#FFFCF5]/95 border-b border-emerald-900/10 shadow-sm' : 'bg-[#FFFCF5]/80 backdrop-blur-sm'}`}>
-      <div className="max-w-[1400px] mx-auto px-4 lg:px-6">
+      <div className="max-w-[1480px] mx-auto px-4 lg:px-6">
         <div className="flex items-center h-[68px] gap-3">
           {/* LEFT: Logo */}
           <Link to="/" className="flex items-center gap-2 group shrink-0 mr-auto notranslate" translate="no" data-testid="nav-logo-home">

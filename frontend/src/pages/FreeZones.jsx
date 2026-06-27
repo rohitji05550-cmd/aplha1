@@ -48,7 +48,7 @@ export default function FreeZones() {
     <div>
       <Navbar />
       <section className="hero-gradient grain">
-        <div className="max-w-[1400px] mx-auto px-5 lg:px-8 pt-10 lg:pt-14 pb-10 text-center">
+        <div className="max-w-[1480px] mx-auto px-5 lg:px-8 pt-3 lg:pt-6 pb-9 text-center">
           <div className="inline-flex items-center gap-2 fade-up justify-center">
             <Sparkles className="h-4 w-4 brand-bronze" />
             <span className="text-xs uppercase tracking-[0.22em] text-slate-600 font-semibold">Free Zone Finder</span>
@@ -107,7 +107,7 @@ export default function FreeZones() {
       </section>
 
       <section className="py-12 bg-[#FFFCF5]">
-        <div className="max-w-[1400px] mx-auto px-5 lg:px-8">
+        <div className="max-w-[1480px] mx-auto px-5 lg:px-8">
           {view === 'large' && (
             <div className="space-y-6">
               {filtered.map((fz, i) => (

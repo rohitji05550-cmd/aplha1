@@ -196,22 +196,34 @@ export default function AdminPanel() {
     <div>
       <Navbar />
       <section className="hero-gradient grain">
-        <div className="max-w-7xl mx-auto px-5 lg:px-8 pt-10 lg:pt-14 pb-10">
+        <div className="max-w-7xl mx-auto px-5 lg:px-8 pt-3 lg:pt-6 pb-9">
           <div className="text-[12px] uppercase tracking-[0.22em] text-slate-500 font-semibold">Admin Panel</div>
           <h1 className="mt-3 font-display font-semibold text-slate-900" style={{ fontSize: 'clamp(2.4rem, 4.4vw, 4rem)', lineHeight: 1.05 }}>Control tower — leads, orders &amp; ops.</h1>
           <p className="mt-3 text-slate-600 max-w-3xl" style={{ fontSize: 'clamp(1rem, 1.15vw, 1.125rem)' }}>Real-time KPIs · 50+ live leads · multi-currency payments · 12,719 indexed activities · 91 freezone packages. All synced with Supabase smrsaedmuaizlesehpee.</p>
           <div className="mt-6 flex flex-wrap gap-2">
-            <Button onClick={() => setTab('overview')} variant={tab === 'overview' ? 'default' : 'outline'} className="rounded-full px-4 h-10 text-xs" data-testid="admin-tab-overview">Overview</Button>
-            <Button onClick={() => setTab('leads')} variant={tab === 'leads' ? 'default' : 'outline'} className="rounded-full px-4 h-10 text-xs">Leads</Button>
-            <Button onClick={() => setTab('orders')} variant={tab === 'orders' ? 'default' : 'outline'} className="rounded-full px-4 h-10 text-xs">Orders</Button>
-            <Button onClick={() => setTab('coupons')} variant={tab === 'coupons' ? 'default' : 'outline'} className="rounded-full px-4 h-10 text-xs">Coupons</Button>
-            <Button onClick={() => setTab('memberships')} variant={tab === 'memberships' ? 'default' : 'outline'} className="rounded-full px-4 h-10 text-xs">Memberships</Button>
-            <Button onClick={() => setTab('kyc')} variant={tab === 'kyc' ? 'default' : 'outline'} className="rounded-full px-4 h-10 text-xs">KYC</Button>
-            <Button onClick={() => setTab('payments')} variant={tab === 'payments' ? 'default' : 'outline'} className="rounded-full px-4 h-10 text-xs">Payment Proofs</Button>
-            <Button onClick={() => setTab('pricing')} variant={tab === 'pricing' ? 'default' : 'outline'} className="rounded-full px-4 h-10 text-xs">Pricing</Button>
-            <Button onClick={() => setTab('activities')} variant={tab === 'activities' ? 'default' : 'outline'} className="rounded-full px-4 h-10 text-xs">Activities</Button>
-            <Button onClick={() => setTab('roles')} variant={tab === 'roles' ? 'default' : 'outline'} className="rounded-full px-4 h-10 text-xs">Roles</Button>
-            <Button onClick={() => setTab('team')} variant={tab === 'team' ? 'default' : 'outline'} className="rounded-full px-4 h-10 text-xs">Team</Button>
+            {[
+              ['overview', 'Overview'],
+              ['leads', 'Leads'],
+              ['orders', 'Orders'],
+              ['coupons', 'Coupons'],
+              ['memberships', 'Memberships'],
+              ['kyc', 'KYC'],
+              ['payments', 'Payment Proofs'],
+              ['pricing', 'Pricing'],
+              ['activities', 'Activities'],
+              ['roles', 'Roles'],
+              ['team', 'Team'],
+            ].map(([k, label]) => (
+              <Button
+                key={k}
+                onClick={() => setTab(k)}
+                variant={tab === k ? 'default' : 'outline'}
+                className="rounded-full px-4 h-10 text-xs"
+                data-testid={`admin-tab-${k}`}
+              >
+                {label}
+              </Button>
+            ))}
           </div>
         </div>
       </section>

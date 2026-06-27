@@ -400,7 +400,7 @@ export default function Compare() {
 
       {/* Hero */}
       <section className="hero-gradient grain">
-        <div className="max-w-[1400px] mx-auto px-5 lg:px-8 pt-10 lg:pt-14 pb-8 text-center">
+        <div className="max-w-[1480px] mx-auto px-5 lg:px-8 pt-3 lg:pt-6 pb-7 text-center">
           <div className="inline-flex items-center gap-2 justify-center">
             <ShieldCheck className="h-4 w-4 brand-emerald" />
             <span className="text-xs uppercase tracking-[0.22em] text-slate-600 font-semibold">Jurisdiction Comparison</span>
@@ -416,7 +416,7 @@ export default function Compare() {
 
       {/* Cards grid */}
       <section className="py-10 bg-[#FFFCF5]">
-        <div className="max-w-[1400px] mx-auto px-5 lg:px-8">
+        <div className="max-w-[1480px] mx-auto px-5 lg:px-8">
           {selectedZones.length === 0 ? (
             <div className="text-center py-16">
               <p className="text-slate-500 mb-4">No free zones selected yet.</p>

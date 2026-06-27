@@ -74,7 +74,7 @@ export default function AISearchPage() {
           <div className="absolute top-40 -left-20 w-[500px] h-[500px] rounded-full bg-amber-200/25 blur-3xl" />
         </div>
 
-        <div className="relative max-w-[1400px] mx-auto px-5 lg:px-8">
+        <div className="relative max-w-[1480px] mx-auto px-5 lg:px-8">
           <div className="flex justify-center mb-4">
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-700/8 border border-emerald-700/15 text-emerald-800 text-[11.5px] font-bold uppercase tracking-[0.18em]">
               <Sparkles className="h-3 w-3" />
@@ -212,7 +212,7 @@ export default function AISearchPage() {
       {/* WHY-USE-IT + FAQ block — visible when no result yet, plus permanent footer info */}
       {!initialQ && (
         <section className="py-14 bg-white border-t border-slate-200/70">
-          <div className="max-w-[1280px] mx-auto px-5 lg:px-8 grid md:grid-cols-3 gap-6">
+          <div className="max-w-[1480px] mx-auto px-5 lg:px-8 grid md:grid-cols-3 gap-6">
             <div className="card-elevated rounded-2xl p-6">
               <div className="text-[10px] uppercase tracking-[0.22em] font-bold brand-emerald">Why AI Search</div>
               <h3 className="font-display text-xl font-semibold text-slate-900 mt-2">12,719 activities indexed</h3>

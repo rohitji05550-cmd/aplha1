@@ -19,8 +19,8 @@ const DIFFERENTIATORS = [
 ];
 
 const TEAM = [
-  { initials: 'PC', name: 'Pankaj Choudhary', title: 'Founder & Director', body: '15+ years in UAE corporate licensing. Expert in DED mainland and freezone regulations across all 7 emirates. Built SmartSetupUAE.ae after experiencing first-hand how confusing pricing in the UAE setup industry can be.' },
-  { initials: 'SJ', name: 'Sarah Jenkins', title: 'Senior Setup Consultant', body: 'Specialist in investor visa applications, Emirates ID, freezone documentation and post-incorporation banking. 8 years of UAE regulatory experience across IFZA, RAKEZ, DMCC and ANCFZ.' },
+  { initials: 'PC', name: 'Pankaj Choudhary', title: 'Founder', body: 'Nanotechnology engineer at heart — earlier years spent in deep research alongside scientists from IIT Bombay, Amity University, NSIC, Rajasthan University and the Centre for Converging Technologies (CCT). Years of guiding businesses through scale-up taught him that founders rarely need more advice — they need honest pricing, real deadlines and one person who picks up the phone. SmartSetupUAE.ae is that platform.' },
+  { initials: 'SJ', name: 'Sarah Jenkins', title: 'Senior Setup Consultant', body: 'Specialist in investor visa applications, Emirates ID, freezone documentation and post-incorporation banking. UAE regulatory experience across IFZA, RAKEZ, DMCC and ANCFZ.' },
   { initials: 'MA', name: 'Mohammed Alam', title: 'Compliance & Legal Advisor', body: 'UAE commercial law, MOA drafting, corporate compliance, VAT / Corporate Tax registration and AML/UBO filings. Fluent in Arabic, English, Hindi and Urdu.' },
 ];
 
@@ -30,27 +30,27 @@ export default function About() {
       <Navbar />
 
       <section className="hero-gradient grain">
-        <div className="max-w-[1100px] mx-auto px-5 lg:px-8 pt-10 lg:pt-14 pb-12 text-center">
+        <div className="max-w-[1480px] mx-auto px-5 lg:px-8 pt-3 lg:pt-6 pb-10 text-center">
           <div className="inline-flex items-center gap-2 fade-up justify-center">
             <Sparkles className="h-4 w-4 brand-bronze" />
             <span className="text-xs uppercase tracking-[0.22em] text-slate-600 font-semibold">Our Story</span>
           </div>
-          <h1 className="mt-4 font-display font-semibold text-slate-900 fade-up delay-100" style={{ fontSize: 'clamp(2.2rem, 4.6vw, 4.4rem)', lineHeight: 1.05 }}>
-            UAE business setup—<br /><span className="shine-text">made honest again.</span>
+          <h1 className="mt-3 font-display font-semibold text-slate-900 fade-up delay-100" style={{ fontSize: 'clamp(1.9rem, 4vw, 3.6rem)', lineHeight: 1.06 }}>
+            UAE business setup—<span className="shine-text">made honest again.</span>
           </h1>
-          <p className="mt-4 text-slate-600 max-w-2xl mx-auto fade-up delay-200" style={{ fontSize: 'clamp(0.95rem, 1.1vw, 1.125rem)' }}>
-            Built by people who have been through UAE business setup themselves. No hidden agenda. No freezone commissions. Just honest, data-driven advice for founders who deserve a fair starting point.
+          <p className="mt-3 text-slate-600 max-w-2xl mx-auto fade-up delay-200" style={{ fontSize: 'clamp(0.95rem, 1.05vw, 1.05rem)' }}>
+            Built by a founder, for founders. No hidden agenda. No freezone commissions. Just honest, data-driven advice for entrepreneurs who deserve a fair starting point.
           </p>
         </div>
       </section>
 
       {/* FOUNDER STORY */}
-      <section className="py-16 bg-[#FFFCF5]">
-        <div className="max-w-[1100px] mx-auto px-5 lg:px-8 grid lg:grid-cols-[260px_1fr] gap-10 items-start">
+      <section className="py-12 lg:py-16 bg-[#FFFCF5]">
+        <div className="max-w-[1480px] mx-auto px-5 lg:px-8 grid lg:grid-cols-[260px_1fr] gap-10 items-start">
           <div>
             <div className="h-40 w-40 rounded-3xl bg-gradient-to-br from-emerald-700 to-emerald-900 grid place-items-center text-white font-display text-5xl font-bold shadow-xl">PC</div>
             <div className="mt-5 font-display text-xl font-semibold text-slate-900">Pankaj Choudhary</div>
-            <div className="text-sm text-slate-500">Founder &amp; Director</div>
+            <div className="text-sm text-slate-500">Founder · Engineer · Researcher</div>
             <div className="text-xs text-slate-500 mt-1">{COMPANY_INFO.legalName}</div>
             <a href={`https://wa.me/${COMPANY_INFO.whatsappNumber}`} target="_blank" rel="noreferrer" className="mt-4 inline-flex items-center gap-2 px-4 h-10 rounded-full bg-emerald-700 text-white text-sm font-semibold hover:bg-emerald-800">
               <Phone className="h-4 w-4" /> Book a call with Pankaj
@@ -61,9 +61,9 @@ export default function About() {
             <div className="text-[10px] uppercase tracking-[0.22em] font-bold brand-bronze">Founder’s Vision</div>
             <h2 className="font-display text-2xl lg:text-3xl font-semibold text-slate-900 mt-2">Why I built SmartSetupUAE.ae</h2>
             <div className="mt-5 space-y-4 text-slate-700 leading-relaxed text-[15px]">
-              <p className="flex gap-3"><Quote className="h-5 w-5 brand-emerald shrink-0 mt-1" /><span>“When I came to the UAE to set up my own business, I found a market full of consultants who pushed whichever freezone paid them the highest commission. I paid more than I needed to — and I was a professional who should have known better. Everyone quoted a different price for VAT registration, Corporate Tax, visa renewal, medical, Emirates ID, MOA drafting and bank-opening documents. There was no single, honest source of truth.”</span></p>
-              <p className="flex gap-3"><Quote className="h-5 w-5 brand-emerald shrink-0 mt-1" /><span>“If I needed company documents for the bank or some authority, I had to chase the consultant on WhatsApp and wait days for a reply. Renewal reminders never came — I almost paid a late penalty for my own licence. I realised hundreds of founders, especially first-timers with limited budgets, were stuck in the same trap, paying twice or three times what was fair just because they did not know better.”</span></p>
-              <p className="flex gap-3"><Quote className="h-5 w-5 brand-emerald shrink-0 mt-1" /><span>“So I built SmartSetupUAE.ae as the platform I wish I had — one place where every entrepreneur (software developer, gold trader, restaurant owner, startup founder) gets the same honest, data-driven advice on which jurisdiction fits, what it actually costs, when the next renewal is due, and how to stay compliant. We are not owned by any freezone. We earn no commission from any authority. We only succeed when you get the right licence for your business — and never get fined for a missed compliance deadline again.”</span></p>
+              <p className="flex gap-3"><Quote className="h-5 w-5 brand-emerald shrink-0 mt-1" /><span>“I am not a typical consultant — I am a founder. I started as a nanotechnology engineer in India and fell in love with deep research, working alongside scientists from IIT Bombay, Amity University, NSIC, Rajasthan University and the Centre for Converging Technologies (CCT). I have spent years helping businesses scale up — guiding founders through product, operations and growth. That is the world I come from.”</span></p>
+              <p className="flex gap-3"><Quote className="h-5 w-5 brand-emerald shrink-0 mt-1" /><span>“When I moved to the UAE I saw the exact problem I had been solving for others — but this time for myself. Every consultant quoted a different price. VAT registration, Corporate Tax registration, visa renewal, medical, Emirates ID, MOA drafting, bank-opening documents — five different numbers from five different people. Nobody could tell me clearly which freezone fit my activity, where I should live, what the real renewal cost would be, or what compliance deadline was coming next. There was no single, honest source of truth.”</span></p>
+              <p className="flex gap-3"><Quote className="h-5 w-5 brand-emerald shrink-0 mt-1" /><span>“I thought — if I am confused, hundreds of first-time founders with limited budgets must be drowning. So I decided to stop waiting for someone else to fix it. I have always believed: see the issue, solve the issue. SmartSetupUAE.ae is my answer — one platform where every founder gets honest, data-driven advice on which jurisdiction fits, what it actually costs, where to live and stay, when the next renewal is due, and how to stay compliant. No commissions from any freezone. Free advisory for the first 500 founders. A single place where peace of mind lives, so a founder can build instead of chasing reminders.”</span></p>
             </div>
 
             <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-5 grid sm:grid-cols-2 gap-4 text-sm">
@@ -92,7 +92,7 @@ export default function About() {
 
       {/* WHY DIFFERENT */}
       <section className="py-16 bg-[#F8F3E8]">
-        <div className="max-w-[1280px] mx-auto px-5 lg:px-8">
+        <div className="max-w-[1480px] mx-auto px-5 lg:px-8">
           <div className="max-w-2xl">
             <div className="text-[10px] uppercase tracking-[0.22em] font-bold brand-bronze">Why SmartSetupUAE.ae</div>
             <h2 className="mt-2 font-display text-2xl lg:text-4xl font-semibold text-slate-900">What makes us genuinely different</h2>
@@ -120,7 +120,7 @@ export default function About() {
 
       {/* TEAM */}
       <section className="py-16 bg-[#FFFCF5]">
-        <div className="max-w-[1280px] mx-auto px-5 lg:px-8">
+        <div className="max-w-[1480px] mx-auto px-5 lg:px-8">
           <div className="text-[10px] uppercase tracking-[0.22em] font-bold brand-bronze">Our Team</div>
           <h2 className="mt-2 font-display text-2xl lg:text-4xl font-semibold text-slate-900">The people behind SmartSetupUAE.ae</h2>
           <div className="mt-8 grid md:grid-cols-3 gap-5">
@@ -139,7 +139,7 @@ export default function About() {
 
       {/* STATS */}
       <section className="py-16 bg-[#F8F3E8]">
-        <div className="max-w-[1100px] mx-auto px-5 lg:px-8 grid lg:grid-cols-4 gap-8 items-start">
+        <div className="max-w-[1480px] mx-auto px-5 lg:px-8 grid lg:grid-cols-4 gap-8 items-start">
           {[
             { n: '40+', l: 'UAE jurisdictions compared' },
             { n: '12,719', l: 'Business activities indexed' },
@@ -156,7 +156,7 @@ export default function About() {
 
       {/* CONTACT STRIP */}
       <section className="py-12 bg-[#0F2A2A] text-white">
-        <div className="max-w-[1100px] mx-auto px-5 lg:px-8 grid md:grid-cols-3 gap-4 text-sm">
+        <div className="max-w-[1480px] mx-auto px-5 lg:px-8 grid md:grid-cols-3 gap-4 text-sm">
           <div className="flex items-center gap-2"><Phone className="h-4 w-4 text-[#F0C674]" /> {COMPANY_INFO.phone}</div>
           <div className="flex items-center gap-2"><Mail className="h-4 w-4 text-[#F0C674]" /> {COMPANY_INFO.email}</div>
           <div className="flex items-center gap-2"><MapPin className="h-4 w-4 text-[#F0C674]" /> {COMPANY_INFO.address}</div>

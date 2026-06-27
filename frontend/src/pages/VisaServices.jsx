@@ -14,7 +14,7 @@ export default function VisaServices() {
     <div>
       <Navbar />
       <section className="hero-gradient grain">
-        <div className="max-w-7xl mx-auto px-5 lg:px-8 pt-10 lg:pt-14 pb-12">
+        <div className="max-w-7xl mx-auto px-5 lg:px-8 pt-3 lg:pt-6 pb-10">
           <div className="flex items-center gap-2 fade-up">
             <Sparkles className="h-4 w-4 brand-bronze" />
             <span className="text-xs uppercase tracking-[0.22em] text-slate-600 font-semibold">UAE Visa Services</span>

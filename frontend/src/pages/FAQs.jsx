@@ -87,7 +87,7 @@ export default function FAQs() {
     <div data-testid="faqs-page">
       <Navbar />
       <section className="hero-gradient grain">
-        <div className="max-w-[1100px] mx-auto px-5 lg:px-8 pt-10 lg:pt-14 pb-10 text-center">
+        <div className="max-w-[1480px] mx-auto px-5 lg:px-8 pt-3 lg:pt-6 pb-9 text-center">
           <span className="text-[11px] uppercase tracking-[0.22em] text-slate-600 font-semibold">Help Center</span>
           <h1 className="mt-3 font-display font-semibold text-slate-900" style={{ fontSize: 'clamp(2rem, 4.4vw, 4rem)', lineHeight: 1.04 }}>Frequently asked questions</h1>
           <p className="mt-3 text-slate-600 max-w-2xl mx-auto" style={{ fontSize: 'clamp(0.95rem, 1.1vw, 1.125rem)' }}>Everything about UAE business setup, free zone vs mainland licences, visa packages, Golden Visa, VAT, corporate tax, banking and renewals. Search for a topic or browse the sections below.</p>
@@ -106,7 +106,7 @@ export default function FAQs() {
       </section>
 
       <section className="py-12 bg-[#FFFCF5]">
-        <div className="max-w-[1100px] mx-auto px-5 lg:px-8 space-y-10">
+        <div className="max-w-[1480px] mx-auto px-5 lg:px-8 space-y-10">
           {filteredSections.length === 0 && (
             <div className="text-center text-slate-500 py-12">No FAQs match &ldquo;{query}&rdquo;. Try a different keyword.</div>
           )}
