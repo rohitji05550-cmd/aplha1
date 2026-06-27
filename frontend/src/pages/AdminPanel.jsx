@@ -691,3 +691,125 @@ function AdminOverview() {
     </div>
   );
 }
+
+/* ──────────────────────────────────────────────────────────────────────
+   Payment Proofs admin tab — reviews bank-transfer proof uploads from
+   /payment-proof public page. Approve / reject sets payment_proofs.status
+   in Supabase which the audit table monitors via RLS.
+   ────────────────────────────────────────────────────────────────────── */
+function PaymentProofsTab() {
+  const { toast } = useToast();
+  const [items, setItems] = useState([]);
+  const [filter, setFilter] = useState('pending');
+  const [loading, setLoading] = useState(false);
+  const [viewing, setViewing] = useState(null);
+
+  const load = useCallback(async () => {
+    setLoading(true);
+    try {
+      const rows = await listPaymentProofs(filter === 'all' ? {} : { status: filter });
+      setItems(rows || []);
+    } catch (e) {
+      toast({ title: 'Failed to load proofs', description: e.message, variant: 'destructive' });
+    } finally {
+      setLoading(false);
+    }
+  }, [filter, toast]);
+
+  useEffect(() => { load(); }, [load]);
+
+  const view = async (row) => {
+    try {
+      const url = await signProofUrl({ path: row.file_path });
+      setViewing({ ...row, signedUrl: url });
+    } catch (e) {
+      toast({ title: 'Cannot open file', description: e.message, variant: 'destructive' });
+    }
+  };
+
+  const setStatus = async (row, status) => {
+    try {
+      await updateProofStatus({ id: row.id, status, reviewer: 'admin' });
+      toast({ title: `Proof ${status}` });
+      load();
+    } catch (e) {
+      toast({ title: 'Update failed', description: e.message, variant: 'destructive' });
+    }
+  };
+
+  return (
+    <div className="card-elevated rounded-3xl p-7" data-testid="admin-payment-proofs">
+      <div className="flex items-center justify-between gap-3 flex-wrap">
+        <div>
+          <div className="text-xs uppercase tracking-[0.22em] font-semibold text-slate-500">Bank Transfer Proofs</div>
+          <div className="mt-2 text-lg font-semibold text-slate-900">{items.length} proof{items.length === 1 ? '' : 's'} {filter !== 'all' ? `(${filter})` : ''}</div>
+        </div>
+        <div className="flex gap-2">
+          {['pending', 'approved', 'rejected', 'all'].map((s) => (
+            <Button key={s} variant={filter === s ? 'default' : 'outline'} className="rounded-full px-3 h-9 text-xs capitalize" onClick={() => setFilter(s)} data-testid={`payment-proof-filter-${s}`}>{s}</Button>
+          ))}
+          <Button variant="outline" className="rounded-full px-4 h-9 text-xs" onClick={load} data-testid="payment-proof-refresh">{loading ? 'Loading…' : 'Refresh'}</Button>
+        </div>
+      </div>
+      <div className="mt-6 overflow-x-auto">
+        <table className="w-full text-sm min-w-[820px]">
+          <thead>
+            <tr className="text-left text-slate-500 border-b">
+              <th className="py-3">Uploaded</th>
+              <th>Order ref</th>
+              <th>Amount</th>
+              <th>Currency</th>
+              <th>Customer</th>
+              <th>Status</th>
+              <th className="text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {items.map((p) => (
+              <tr key={p.id} className="border-b border-slate-100">
+                <td className="py-3 text-slate-500">{p.uploaded_at ? new Date(p.uploaded_at).toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' }) : '-'}</td>
+                <td className="font-mono text-xs">{p.order_ref || p.order_id || '-'}</td>
+                <td className="font-semibold">{Number(p.amount || 0).toLocaleString()}</td>
+                <td>{p.currency || 'AED'}</td>
+                <td className="text-slate-700">{p.customer_email || p.customer_name || '-'}</td>
+                <td>
+                  <span className={`px-2 py-1 rounded-full text-[11px] font-semibold ${p.status === 'approved' ? 'bg-emerald-50 text-emerald-700' : p.status === 'rejected' ? 'bg-red-50 text-red-700' : 'bg-amber-50 text-amber-700'}`}>{p.status || 'pending'}</span>
+                </td>
+                <td className="text-right">
+                  <div className="inline-flex gap-1.5">
+                    <Button variant="outline" className="rounded-full h-8 px-3 text-xs" onClick={() => view(p)}>View</Button>
+                    {p.status !== 'approved' && (
+                      <Button className="rounded-full h-8 px-3 text-xs bg-emerald-700 text-white hover:bg-emerald-800" onClick={() => setStatus(p, 'approved')}>Approve</Button>
+                    )}
+                    {p.status !== 'rejected' && (
+                      <Button variant="outline" className="rounded-full h-8 px-3 text-xs border-red-400 text-red-700 hover:bg-red-50" onClick={() => setStatus(p, 'rejected')}>Reject</Button>
+                    )}
+                  </div>
+                </td>
+              </tr>
+            ))}
+            {!items.length && !loading && (
+              <tr><td colSpan={7} className="py-10 text-center text-slate-400">No proofs in this view</td></tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+
+      {viewing && (
+        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm grid place-items-center p-6" onClick={() => setViewing(null)}>
+          <div className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full p-5" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center justify-between mb-3">
+              <div className="font-semibold text-slate-900">Proof · {viewing.order_ref || viewing.id}</div>
+              <Button variant="outline" className="rounded-full h-8 px-3 text-xs" onClick={() => setViewing(null)}>Close</Button>
+            </div>
+            {viewing.signedUrl?.match(/\.(png|jpe?g|webp)$/i) ? (
+              <img src={viewing.signedUrl} alt="Payment proof" className="max-h-[70vh] mx-auto rounded-xl border border-slate-200" />
+            ) : (
+              <iframe src={viewing.signedUrl} title="proof" className="w-full h-[70vh] rounded-xl border border-slate-200" />
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
