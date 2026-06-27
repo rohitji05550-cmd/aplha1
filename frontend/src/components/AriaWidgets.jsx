@@ -3,6 +3,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { MessageCircle, X, Send, Sparkles, Loader2 } from 'lucide-react';
 import { useI18n, LANGUAGES, flagUrl } from '../context/I18nContext';
+import { useAuth } from '../context/AuthContext';
 
 const WHATSAPP = '971585903155';
 const API = process.env.REACT_APP_BACKEND_URL;
@@ -27,6 +28,8 @@ const QUICK_PROMPTS = {
 
 export function AriaChatbot() {
   const { lang, langMeta, t } = useI18n();
+  const { user } = useAuth();
+  const userEmail = user?.email || null;
   const [open, setOpen] = useState(false);
   const [pulse, setPulse] = useState(true);
   const [messages, setMessages] = useState([]);
@@ -56,7 +59,24 @@ export function AriaChatbot() {
       });
       setLeadSent(true);
       setLeadFormOpen(false);
-      setMessages((m) => [...m, { role: 'assistant', content: `✓ Got it, ${leadForm.name}! Your advisor will WhatsApp you at ${leadForm.country_code} ${leadForm.phone} within 30 minutes. Meanwhile feel free to keep asking me anything.` }]);
+      // Also open a support ticket so a human picks it up and SLA timer starts.
+      try {
+        const lastUserMsg = [...messages].reverse().find((m) => m.role === 'user');
+        await fetch(`${API}/api/support/tickets`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            subject: lastUserMsg?.content?.slice(0, 80) || 'New enquiry from Aria',
+            message: messages.slice(-6).map((m) => `${m.role === 'user' ? 'Customer' : 'Aria'}: ${m.content}`).join('\n') || leadForm.name,
+            customer_email: leadForm.email,
+            customer_name: leadForm.name,
+            phone: `${leadForm.country_code} ${leadForm.phone}`,
+            channel: 'aria',
+            related_url: window.location.pathname,
+          }),
+        });
+      } catch (_t) { /* non-blocking */ }
+      setMessages((m) => [...m, { role: 'assistant', content: `✓ Got it, ${leadForm.name}! I've opened a support ticket (you'll get a reference). Your advisor will WhatsApp you at ${leadForm.country_code} ${leadForm.phone} within 30 minutes. Meanwhile feel free to keep asking me anything.` }]);
     } catch (err) {
       setMessages((m) => [...m, { role: 'assistant', content: 'Sorry — could not save your details. Please WhatsApp +971 58 590 3155 directly.' }]);
     } finally {
@@ -99,6 +119,7 @@ export function AriaChatbot() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           session_id: sessionRef.current,
+          user_email: userEmail,
           message: text,
           language: (LANGUAGES.find((l) => l.code === lang) || {}).label || 'English',
           context: { page: window.location.pathname },

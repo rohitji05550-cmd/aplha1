@@ -1,6 +1,8 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import PageFAQ from '../components/PageFAQ';
+import { faqMainland } from '../constants/pageFaqs';
 import LeadBox from '../components/LeadBox';
 import { MAINLAND_ZONES } from '../data/zones';
 import { Button } from '../components/ui/button';
@@ -283,6 +285,7 @@ export default function Mainland() {
           </div>
         </div>
       </section>
+      <PageFAQ title="Mainland (DED) Licence — Common questions" intro="Mainland trade licences, cost in 2026, mainland vs free zone, visas, banking and renewals." items={faqMainland} testId="faq-mainland" />
       <Footer />
     </div>
   );

@@ -2,6 +2,8 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import PageFAQ from '../components/PageFAQ';
+import { faqCompare } from '../constants/pageFaqs';
 import { Button } from '../components/ui/button';
 import { ZONES } from '../data/zones';
 import { loadFreezonePackages, mergeZonesWithLivePackages } from '../lib/pricingService';
@@ -493,6 +495,7 @@ export default function Compare() {
       </section>
 
       <BenefitsModal zone={benefitsZone} onClose={() => setBenefitsZone(null)} />
+      <PageFAQ title="Compare Free Zones — Common questions" intro="What 'Live pricing' means, comparing more than 4 free zones, VAT-inclusive prices and refresh frequency." items={faqCompare} testId="faq-compare" />
       <Footer />
     </div>
   );

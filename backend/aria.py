@@ -229,6 +229,60 @@ class ChatRequest(BaseModel):
     message: str
     language: Optional[str] = "English"
     context: Optional[Dict[str, Any]] = None  # current page, selected zone, etc
+    user_email: Optional[str] = None  # used to persist & recall memory
+
+
+# ---------- Aria persistent memory ----------
+# Each user_email (or session_id when no email is provided) owns a transcript.
+# Latest 12 turns are injected into the system prompt so Aria can resume
+# conversations like a real long-term advisor.
+try:
+    from motor.motor_asyncio import AsyncIOMotorClient
+    _mongo_client = AsyncIOMotorClient(os.environ.get("MONGO_URL", "mongodb://localhost:27017"))
+    _aria_mem = _mongo_client[os.environ.get("DB_NAME", "smartsetupuae")]["aria_conversations"]
+except Exception as _exc:  # pragma: no cover
+    _aria_mem = None
+    logger.warning("Aria memory disabled — Mongo not available: %s", _exc)
+
+
+async def _load_recent_memory(key: str, limit: int = 12) -> List[Dict[str, str]]:
+    if _aria_mem is None or not key:
+        return []
+    try:
+        cursor = _aria_mem.find({"key": key}).sort("at", -1).limit(limit)
+        rows = [doc async for doc in cursor]
+        # Return oldest → newest for natural conversational flow
+        return [{"role": r.get("role", "user"), "text": r.get("text", "")} for r in reversed(rows)]
+    except Exception as exc:
+        logger.warning("Aria memory load failed: %s", exc)
+        return []
+
+
+async def _append_memory(key: str, role: str, text: str) -> None:
+    if _aria_mem is None or not key or not text:
+        return
+    try:
+        from datetime import datetime, timezone
+        await _aria_mem.insert_one({
+            "key": key,
+            "role": role,
+            "text": text[:4000],
+            "at": datetime.now(timezone.utc).isoformat(),
+        })
+    except Exception as exc:
+        logger.warning("Aria memory append failed: %s", exc)
+
+
+def _memory_to_prompt(turns: List[Dict[str, str]]) -> str:
+    if not turns:
+        return ""
+    lines = ["\n\n# PREVIOUS CONVERSATION (use sparingly — only when it helps the user):"]
+    for t in turns[-12:]:
+        who = "User" if t.get("role") == "user" else "You"
+        snippet = (t.get("text") or "").replace("\n", " ")[:240]
+        lines.append(f"- {who}: {snippet}")
+    lines.append("# END OF PREVIOUS CONVERSATION")
+    return "\n".join(lines)
 
 
 async def emergent_stream(system: str, user: str):
@@ -264,17 +318,28 @@ async def chat_stream(req: ChatRequest):
     if req.context:
         sys_msg += f"\n\n# Current page context (use sparingly):\n{json.dumps(req.context)[:400]}"
 
+    # PERSISTENT MEMORY — prefer user_email key, fall back to session_id
+    memory_key = (req.user_email or req.session_id or "").strip().lower()
+    recent_turns = await _load_recent_memory(memory_key) if memory_key else []
+    sys_msg += _memory_to_prompt(recent_turns)
+
+    # Persist the user message immediately (so a crash mid-reply still saves it)
+    await _append_memory(memory_key, "user", req.message)
+
     async def event_generator():
+        full_reply_chunks: List[str] = []
         try:
             generator = emergent_stream(sys_msg, req.message) if use_emergent else gemini_direct_stream(sys_msg, req.message)
             async for ev in generator:
                 if "delta" in ev:
+                    full_reply_chunks.append(ev["delta"])
                     yield f"data: {json.dumps({'delta': ev['delta']})}\n\n"
                 elif "error" in ev:
                     # If Emergent errored AND we have a Gemini key as backup, try once
                     if use_emergent and GEMINI_API_KEY:
                         async for ev2 in gemini_direct_stream(sys_msg, req.message):
                             if "delta" in ev2:
+                                full_reply_chunks.append(ev2["delta"])
                                 yield f"data: {json.dumps({'delta': ev2['delta']})}\n\n"
                             elif "error" in ev2:
                                 yield f"data: {json.dumps({'error': ev2['error']})}\n\n"
@@ -285,6 +350,11 @@ async def chat_stream(req: ChatRequest):
             logger.exception("Aria stream failed")
             yield f"data: {json.dumps({'error': str(exc)})}\n\n"
             yield "data: [DONE]\n\n"
+        finally:
+            # Persist the final assistant response for memory
+            final = "".join(full_reply_chunks).strip()
+            if final and memory_key:
+                await _append_memory(memory_key, "assistant", final)
 
     return StreamingResponse(
         event_generator(),

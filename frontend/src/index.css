@@ -313,13 +313,22 @@ html[dir="rtl"] [data-testid="ai-search-hero-input"] {
    site never looks "phone-on-desktop". Tight side padding, generous
    max-width on large viewports.
    ──────────────────────────────────────────────────────────────────── */
+@media (min-width: 1024px) {
+  .max-w-3xl,
+  .max-w-4xl,
+  .max-w-5xl,
+  .max-w-6xl,
+  .max-w-7xl {
+    max-width: min(1480px, 97vw) !important;
+  }
+}
 @media (min-width: 1280px) {
   .max-w-3xl,
   .max-w-4xl,
   .max-w-5xl,
   .max-w-6xl,
   .max-w-7xl {
-    max-width: min(1560px, 96vw) !important;
+    max-width: min(1640px, 97vw) !important;
   }
 }
 @media (min-width: 1600px) {
@@ -328,7 +337,7 @@ html[dir="rtl"] [data-testid="ai-search-hero-input"] {
   .max-w-5xl,
   .max-w-6xl,
   .max-w-7xl {
-    max-width: min(1720px, 95vw) !important;
+    max-width: min(1820px, 96vw) !important;
   }
 }
 @media (min-width: 1920px) {
@@ -337,8 +346,15 @@ html[dir="rtl"] [data-testid="ai-search-hero-input"] {
   .max-w-5xl,
   .max-w-6xl,
   .max-w-7xl {
-    max-width: 1820px !important;
+    max-width: 1880px !important;
   }
+}
+/* Tighten default side padding */
+@media (min-width: 1024px) {
+  .px-5.lg\:px-8 { padding-left: 1.5rem !important; padding-right: 1.5rem !important; }
+}
+@media (min-width: 1600px) {
+  .px-5.lg\:px-8 { padding-left: 2rem !important; padding-right: 2rem !important; }
 }
 
 /* Kill the empty gap between navbar and hero on every page. The Navbar is

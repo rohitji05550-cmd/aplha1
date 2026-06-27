@@ -1,6 +1,8 @@
 import React from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import PageFAQ from '../components/PageFAQ';
+import { faqVisa } from '../constants/pageFaqs';
 import { VISA_TYPES } from '../mock';
 import { Crown, Briefcase, UserCheck, Users, Sparkles } from 'lucide-react';
 import { Button } from '../components/ui/button';
@@ -49,6 +51,7 @@ export default function VisaServices() {
           })}
         </div>
       </section>
+      <PageFAQ title="UAE Visa Services — Common questions" intro="Investor, employment, Golden, family — durations, costs, processing time, eligibility, family sponsorship and rejection handling." items={faqVisa} testId="faq-visa" />
       <Footer />
     </div>
   );

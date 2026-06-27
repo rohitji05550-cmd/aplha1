@@ -207,6 +207,7 @@ export default function AdminPanel() {
           <nav className="flex-1 py-3 space-y-0.5">
             {[
               { k: 'overview',    label: 'Overview',      i: '◎', meta: 'KPIs · stats' },
+              { k: 'support',     label: 'Support',       i: '☎', meta: 'Tickets · 30-min SLA' },
               { k: 'leads',       label: 'Leads',         i: '✿', meta: 'Captured enquiries' },
               { k: 'orders',      label: 'Orders',        i: '◈', meta: 'Stripe + bank' },
               { k: 'coupons',     label: 'Coupons',       i: '%',  meta: 'Promo codes' },
@@ -249,7 +250,7 @@ export default function AdminPanel() {
           {/* Mobile tab strip (visible only < lg) */}
           <div className="lg:hidden bg-white border-b border-slate-200 px-4 py-3 overflow-x-auto">
             <div className="flex gap-2 whitespace-nowrap">
-              {['overview','leads','orders','coupons','memberships','kyc','payments','pricing','activities','roles','team'].map((k) => (
+              {['overview','support','leads','orders','coupons','memberships','kyc','payments','pricing','activities','roles','team'].map((k) => (
                 <Button key={k} size="sm" onClick={() => setTab(k)} variant={tab === k ? 'default' : 'outline'} className="rounded-full px-3 h-8 text-[11px] capitalize">{k}</Button>
               ))}
             </div>
@@ -261,6 +262,7 @@ export default function AdminPanel() {
               <div className="text-[11px] uppercase tracking-[0.22em] font-bold text-slate-500">{tab.toUpperCase()}</div>
               <h1 className="mt-1 font-display text-2xl font-semibold text-slate-900">
                 {tab === 'overview' && 'Platform overview'}
+                {tab === 'support' && 'Support tickets — 30-minute SLA'}
                 {tab === 'leads' && 'Captured leads'}
                 {tab === 'orders' && 'Orders'}
                 {tab === 'coupons' && 'Coupons & promos'}
@@ -278,6 +280,7 @@ export default function AdminPanel() {
 
           <div className="px-6 lg:px-10 py-6 space-y-6">
           {tab === 'overview' && <AdminOverview />}
+          {tab === 'support' && <SupportTab />}
           {tab === 'leads' && (
             <div className="card-elevated rounded-3xl p-7">
               <div className="flex items-center justify-between gap-4 flex-wrap">
@@ -324,31 +327,7 @@ export default function AdminPanel() {
           )}
 
           {tab === 'pricing' && (
-            <div className="card-elevated rounded-3xl p-7">
-              <div className="flex items-center justify-between gap-4 flex-wrap">
-                <div><div className="text-xs uppercase tracking-[0.22em] font-semibold text-slate-500">Live Pricing</div><div className="mt-2 text-lg font-semibold text-slate-900">{livePackages.length} Supabase package rows shown</div></div>
-                <Button onClick={loadPackages} variant="outline" className="rounded-full px-5 h-10">Reload Packages</Button>
-              </div>
-              <div className="mt-6 overflow-x-auto">
-                <table className="w-full text-sm min-w-[900px]">
-                  <thead><tr className="text-left text-slate-500 border-b"><th className="py-3">Free Zone</th><th>Package</th><th>Duration</th><th>Workspace</th><th>Base AED</th><th>Service AED</th><th>Status</th></tr></thead>
-                  <tbody>
-                    {livePackages.map((pkg) => (
-                      <tr key={pkg.id} className="border-b border-slate-100">
-                        <td className="py-3 font-medium text-slate-900">{pkg.freezone_name}</td>
-                        <td>{pkg.package_name}</td>
-                        <td>{pkg.duration}</td>
-                        <td>{pkg.workspace || '-'}</td>
-                        <td>AED {Number(pkg.base_price || 0).toLocaleString()}</td>
-                        <td>AED {Number(pkg.service_fee || 0).toLocaleString()}</td>
-                        <td><span className="px-2 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs">{pkg.is_active === false ? 'inactive' : 'active'}</span></td>
-                      </tr>
-                    ))}
-                    {livePackages.length === 0 && <tr><td colSpan="7" className="py-8 text-center text-slate-500">No live packages loaded. Check freezone_packages RLS read policy.</td></tr>}
-                  </tbody>
-                </table>
-              </div>
-            </div>
+            <PricingEditor />
           )}
 
           {tab === 'orders' && (
@@ -890,3 +869,388 @@ function PaymentProofsTab() {
     </div>
   );
 }
+
+/* ──────────────────────────────────────────────────────────────────────
+   Pricing Editor — live CRUD on Supabase `freezone_packages`.
+   Public site reads from the SAME table, so changes here are reflected
+   on /free-zones, /compare and /ai-search within seconds (no rebuild).
+   ────────────────────────────────────────────────────────────────────── */
+function PricingEditor() {
+  const { toast } = useToast();
+  const [rows, setRows] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [filter, setFilter] = useState('');
+  const [editing, setEditing] = useState(null);
+  const [creating, setCreating] = useState(false);
+  const [draft, setDraft] = useState({ freezone: '', name: '', base_price: '', visas_included: 0, activities_included: 1, office_type: '', duration_years: 1, notes: '', currency: 'AED' });
+
+  const load = useCallback(async () => {
+    setLoading(true);
+    try {
+      const token = getToken();
+      const r = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/admin/packages`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (!r.ok) throw new Error(`HTTP ${r.status}`);
+      setRows(await r.json());
+    } catch (e) {
+      toast({ title: 'Could not load packages', description: e.message, variant: 'destructive' });
+    } finally { setLoading(false); }
+  }, [toast]);
+  useEffect(() => { load(); }, [load]);
+
+  const filtered = rows.filter((p) => {
+    if (!filter) return true;
+    const f = filter.toLowerCase();
+    return [p.freezone, p.name, p.office_type, p.notes].filter(Boolean).some((s) => String(s).toLowerCase().includes(f));
+  });
+
+  const startEdit = (row) => {
+    setEditing(row.id);
+    setDraft({
+      freezone: row.freezone || '',
+      name: row.name || '',
+      base_price: row.base_price ?? '',
+      visas_included: row.visas_included ?? 0,
+      activities_included: row.activities_included ?? 1,
+      office_type: row.office_type || '',
+      duration_years: row.duration_years ?? 1,
+      notes: row.notes || '',
+      currency: row.currency || 'AED',
+      is_active: row.is_active !== false,
+    });
+  };
+
+  const cancel = () => { setEditing(null); setCreating(false); };
+
+  const save = async () => {
+    const token = getToken();
+    const body = { ...draft, base_price: Number(draft.base_price) || 0 };
+    const url = creating
+      ? `${process.env.REACT_APP_BACKEND_URL}/api/admin/packages`
+      : `${process.env.REACT_APP_BACKEND_URL}/api/admin/packages/${editing}`;
+    try {
+      const r = await fetch(url, {
+        method: creating ? 'POST' : 'PATCH',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify(body),
+      });
+      if (!r.ok) throw new Error(await r.text());
+      toast({ title: creating ? 'Package created' : 'Package updated', description: `Live on the website in seconds.` });
+      cancel();
+      load();
+    } catch (e) {
+      toast({ title: 'Save failed', description: String(e.message || e).slice(0, 200), variant: 'destructive' });
+    }
+  };
+
+  const softDelete = async (id) => {
+    if (!window.confirm('Mark this package inactive? (Public site will hide it.)')) return;
+    const token = getToken();
+    try {
+      const r = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/admin/packages/${id}`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (!r.ok) throw new Error(`HTTP ${r.status}`);
+      toast({ title: 'Package hidden' });
+      load();
+    } catch (e) {
+      toast({ title: 'Delete failed', description: e.message, variant: 'destructive' });
+    }
+  };
+
+  const renderCell = (children, className = '') => <td className={`py-3 px-2 ${className}`}>{children}</td>;
+  const renderInput = (k, type = 'text', placeholder = '', w = 'w-full') => (
+    <Input value={draft[k] ?? ''} type={type} placeholder={placeholder} className={`h-9 ${w}`} onChange={(e) => setDraft({ ...draft, [k]: e.target.value })} />
+  );
+
+  return (
+    <div className="space-y-4" data-testid="admin-pricing-editor">
+      <div className="bg-white rounded-2xl border border-slate-200 p-5 flex items-center justify-between gap-3 flex-wrap">
+        <div>
+          <div className="text-[11px] uppercase tracking-[0.22em] font-bold text-slate-500">Live pricing editor</div>
+          <div className="mt-1 text-sm text-slate-700">{rows.length} package rows · edits PATCH Supabase directly · public site reflects within seconds</div>
+        </div>
+        <div className="flex gap-2 flex-wrap items-center">
+          <Input value={filter} onChange={(e) => setFilter(e.target.value)} placeholder="Filter by zone, package, notes…" className="h-9 w-72" data-testid="pricing-filter" />
+          <Button onClick={() => { setCreating(true); setEditing(null); setDraft({ freezone: '', name: '', base_price: '', visas_included: 0, activities_included: 1, office_type: '', duration_years: 1, notes: '', currency: 'AED', is_active: true }); }} className="rounded-full bg-emerald-700 hover:bg-emerald-800 text-white h-9 text-xs px-4" data-testid="pricing-add">+ Add package</Button>
+          <Button onClick={load} variant="outline" className="rounded-full h-9 text-xs px-4">↻ Refresh</Button>
+        </div>
+      </div>
+
+      {creating && (
+        <div className="bg-emerald-50/50 rounded-2xl border-2 border-emerald-200 p-5" data-testid="pricing-create-form">
+          <div className="font-semibold text-slate-900 mb-3">New package</div>
+          <div className="grid sm:grid-cols-4 gap-2">
+            {renderInput('freezone', 'text', 'Free zone (e.g. IFZA)')}
+            {renderInput('name', 'text', 'Package name')}
+            {renderInput('base_price', 'number', 'Base price AED')}
+            {renderInput('visas_included', 'number', 'Visas')}
+            {renderInput('activities_included', 'number', 'Activities')}
+            {renderInput('office_type', 'text', 'Workspace (Flexi / Office)')}
+            {renderInput('duration_years', 'number', 'Duration yrs')}
+            {renderInput('notes', 'text', 'Internal notes')}
+          </div>
+          <div className="mt-3 flex gap-2">
+            <Button onClick={save} className="rounded-full bg-emerald-700 text-white h-9 px-5 text-xs">Save new package</Button>
+            <Button onClick={cancel} variant="outline" className="rounded-full h-9 px-5 text-xs">Cancel</Button>
+          </div>
+        </div>
+      )}
+
+      <div className="bg-white rounded-2xl border border-slate-200 overflow-x-auto">
+        <table className="w-full text-sm min-w-[1100px]">
+          <thead>
+            <tr className="text-left text-slate-500 border-b bg-slate-50">
+              <th className="py-3 px-3">Free Zone</th>
+              <th>Package</th>
+              <th>Base AED</th>
+              <th>Visas</th>
+              <th>Activities</th>
+              <th>Workspace</th>
+              <th>Years</th>
+              <th>Active</th>
+              <th className="text-right pr-3">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {loading && <tr><td colSpan={9} className="py-8 text-center text-slate-400">Loading…</td></tr>}
+            {!loading && filtered.map((p) => (
+              editing === p.id ? (
+                <tr key={p.id} className="border-b bg-emerald-50/40">
+                  {renderCell(renderInput('freezone'))}
+                  {renderCell(renderInput('name'))}
+                  {renderCell(renderInput('base_price', 'number'))}
+                  {renderCell(renderInput('visas_included', 'number'))}
+                  {renderCell(renderInput('activities_included', 'number'))}
+                  {renderCell(renderInput('office_type'))}
+                  {renderCell(renderInput('duration_years', 'number'))}
+                  {renderCell(
+                    <select value={draft.is_active ? 'yes' : 'no'} onChange={(e) => setDraft({ ...draft, is_active: e.target.value === 'yes' })} className="h-9 rounded-md border border-slate-300 px-2 text-sm">
+                      <option value="yes">Active</option>
+                      <option value="no">Hidden</option>
+                    </select>
+                  )}
+                  <td className="py-3 pr-3 text-right whitespace-nowrap">
+                    <Button onClick={save} className="rounded-full bg-emerald-700 text-white h-8 px-3 text-xs mr-1">Save</Button>
+                    <Button onClick={cancel} variant="outline" className="rounded-full h-8 px-3 text-xs">Cancel</Button>
+                  </td>
+                </tr>
+              ) : (
+                <tr key={p.id} className="border-b border-slate-100 hover:bg-slate-50/50">
+                  {renderCell(p.freezone, 'font-semibold text-slate-900 pl-3')}
+                  {renderCell(p.name || '-')}
+                  {renderCell(`AED ${Number(p.base_price || 0).toLocaleString()}`, 'tabular-nums')}
+                  {renderCell(p.visas_included ?? 0)}
+                  {renderCell(p.activities_included ?? 1)}
+                  {renderCell(p.office_type || '-')}
+                  {renderCell(p.duration_years ?? 1)}
+                  {renderCell(
+                    <span className={`px-2 py-1 rounded-full text-[11px] font-semibold ${p.is_active === false ? 'bg-slate-100 text-slate-500' : 'bg-emerald-50 text-emerald-700'}`}>{p.is_active === false ? 'Hidden' : 'Active'}</span>
+                  )}
+                  <td className="py-3 pr-3 text-right whitespace-nowrap">
+                    <Button onClick={() => startEdit(p)} variant="outline" className="rounded-full h-8 px-3 text-xs mr-1" data-testid={`pricing-edit-${p.id}`}>Edit</Button>
+                    <Button onClick={() => softDelete(p.id)} variant="outline" className="rounded-full h-8 px-3 text-xs border-red-300 text-red-700 hover:bg-red-50">Hide</Button>
+                  </td>
+                </tr>
+              )
+            ))}
+            {!loading && filtered.length === 0 && (
+              <tr><td colSpan={9} className="py-10 text-center text-slate-400">No packages match your filter</td></tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
+
+/* ──────────────────────────────────────────────────────────────────────
+   Support Tickets admin tab — see all tickets, claim, reply, resolve.
+   Aria-first reply is created automatically when a ticket is opened.
+   ────────────────────────────────────────────────────────────────────── */
+function SupportTab() {
+  const { user } = useAuth();
+  const { toast } = useToast();
+  const [tickets, setTickets] = useState([]);
+  const [filter, setFilter] = useState('open');
+  const [active, setActive] = useState(null);
+  const [messages, setMessages] = useState([]);
+  const [reply, setReply] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [sending, setSending] = useState(false);
+
+  const API = process.env.REACT_APP_BACKEND_URL;
+  const authHdr = useCallback(() => ({ Authorization: `Bearer ${getToken()}` }), []);
+
+  const load = useCallback(async () => {
+    setLoading(true);
+    try {
+      const url = filter === 'mine' ? `${API}/api/support/tickets?mine=true` : filter === 'all' ? `${API}/api/support/tickets` : `${API}/api/support/tickets?status=${filter}`;
+      const r = await fetch(url, { headers: authHdr() });
+      if (!r.ok) throw new Error(`HTTP ${r.status}`);
+      setTickets(await r.json());
+    } catch (e) {
+      toast({ title: 'Could not load tickets', description: e.message, variant: 'destructive' });
+    } finally { setLoading(false); }
+  }, [API, authHdr, filter, toast]);
+
+  useEffect(() => { load(); const t = setInterval(load, 20000); return () => clearInterval(t); }, [load]);
+
+  const openTicket = async (t) => {
+    setActive(t);
+    setMessages([]);
+    try {
+      const r = await fetch(`${API}/api/support/tickets/${t._id}`, { headers: authHdr() });
+      if (r.ok) {
+        const d = await r.json();
+        setActive(d.ticket);
+        setMessages(d.messages || []);
+      }
+    } catch (e) { /* noop */ }
+  };
+
+  const claim = async () => {
+    if (!active) return;
+    try {
+      const r = await fetch(`${API}/api/support/tickets/${active._id}/claim`, { method: 'POST', headers: authHdr() });
+      if (!r.ok) throw new Error(await r.text());
+      const d = await r.json();
+      setActive(d.ticket);
+      toast({ title: 'Ticket assigned to you' });
+      load();
+    } catch (e) { toast({ title: 'Claim failed', description: e.message, variant: 'destructive' }); }
+  };
+
+  const send = async () => {
+    if (!reply.trim() || !active) return;
+    setSending(true);
+    try {
+      const r = await fetch(`${API}/api/support/tickets/${active._id}/messages`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', ...authHdr() },
+        body: JSON.stringify({ body: reply }),
+      });
+      if (!r.ok) throw new Error(await r.text());
+      setReply('');
+      openTicket(active);
+      load();
+    } catch (e) { toast({ title: 'Send failed', description: e.message, variant: 'destructive' }); }
+    finally { setSending(false); }
+  };
+
+  const setStatus = async (status) => {
+    if (!active) return;
+    try {
+      const r = await fetch(`${API}/api/support/tickets/${active._id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', ...authHdr() },
+        body: JSON.stringify({ status }),
+      });
+      if (!r.ok) throw new Error(await r.text());
+      const d = await r.json();
+      setActive(d.ticket);
+      toast({ title: `Ticket ${status}` });
+      load();
+    } catch (e) { toast({ title: 'Update failed', description: e.message, variant: 'destructive' }); }
+  };
+
+  const minsAgo = (iso) => {
+    if (!iso) return '-';
+    const m = Math.floor((Date.now() - new Date(iso).getTime()) / 60000);
+    if (m < 1) return 'just now';
+    if (m < 60) return `${m}m ago`;
+    const h = Math.floor(m / 60);
+    if (h < 24) return `${h}h ago`;
+    return `${Math.floor(h / 24)}d ago`;
+  };
+
+  const slaBadge = (t) => {
+    if (t.status === 'resolved' || t.status === 'closed') return null;
+    if (!t.first_response_at) {
+      const minsSince = Math.floor((Date.now() - new Date(t.created_at).getTime()) / 60000);
+      const ok = minsSince <= 30;
+      return <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${ok ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700'}`}>{ok ? `SLA ${30 - minsSince}m left` : `SLA breached ${minsSince - 30}m`}</span>;
+    }
+    return <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-100 text-blue-700">First reply sent</span>;
+  };
+
+  return (
+    <div className="grid lg:grid-cols-[400px_1fr] gap-4" data-testid="admin-support">
+      {/* LEFT — ticket list */}
+      <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden flex flex-col h-[70vh]">
+        <div className="px-4 py-3 border-b border-slate-200 flex items-center gap-2 flex-wrap">
+          <div className="text-[11px] uppercase tracking-[0.22em] font-bold text-slate-500">{tickets.length} tickets</div>
+          <div className="ml-auto flex gap-1">
+            {[
+              { k: 'open', l: 'Open' },
+              { k: 'in_progress', l: 'In progress' },
+              { k: 'mine', l: 'Mine' },
+              { k: 'resolved', l: 'Resolved' },
+              { k: 'all', l: 'All' },
+            ].map((f) => (
+              <button key={f.k} onClick={() => setFilter(f.k)} className={`px-2.5 py-1 rounded-full text-[11px] font-semibold ${filter === f.k ? 'bg-emerald-700 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`} data-testid={`support-filter-${f.k}`}>{f.l}</button>
+            ))}
+          </div>
+        </div>
+        <div className="flex-1 overflow-y-auto divide-y divide-slate-100">
+          {loading && <div className="p-6 text-center text-slate-400">Loading…</div>}
+          {!loading && tickets.length === 0 && <div className="p-8 text-center text-slate-400 text-sm">No tickets in this view.</div>}
+          {tickets.map((t) => (
+            <button key={t._id} onClick={() => openTicket(t)} className={`w-full text-left p-3 hover:bg-slate-50 transition-colors ${active?._id === t._id ? 'bg-emerald-50' : ''}`} data-testid={`support-ticket-${t._id}`}>
+              <div className="flex items-center justify-between gap-2">
+                <div className="font-mono text-[11px] text-slate-500">{t.reference}</div>
+                {slaBadge(t)}
+              </div>
+              <div className="mt-1 font-semibold text-slate-900 text-[13px] truncate">{t.subject || '(no subject)'}</div>
+              <div className="mt-0.5 text-[11.5px] text-slate-500 truncate">{t.customer_email || 'anonymous'}</div>
+              <div className="mt-1 flex items-center justify-between text-[10.5px]">
+                <span className={`px-1.5 py-0.5 rounded-full font-semibold ${t.status === 'open' ? 'bg-amber-100 text-amber-700' : t.status === 'in_progress' ? 'bg-blue-100 text-blue-700' : t.status === 'resolved' ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-500'}`}>{t.status}</span>
+                <span className="text-slate-400">{minsAgo(t.created_at)}</span>
+              </div>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* RIGHT — thread */}
+      <div className="bg-white rounded-2xl border border-slate-200 flex flex-col h-[70vh]">
+        {!active && <div className="flex-1 grid place-items-center text-slate-400">Pick a ticket to start chatting</div>}
+        {active && (
+          <>
+            <div className="px-5 py-3 border-b border-slate-200 flex items-center justify-between gap-3 flex-wrap">
+              <div>
+                <div className="font-mono text-[11px] text-slate-500">{active.reference} · {active.channel}</div>
+                <div className="font-semibold text-slate-900">{active.subject}</div>
+                <div className="text-[11.5px] text-slate-500">{active.customer_name} · {active.customer_email} · {active.phone || '—'}</div>
+              </div>
+              <div className="flex gap-2 flex-wrap">
+                {!active.assigned_to && <Button onClick={claim} className="rounded-full bg-emerald-700 text-white h-8 px-4 text-xs">Claim ticket</Button>}
+                {active.assigned_to && <span className="text-[11px] px-2.5 py-1 rounded-full bg-blue-100 text-blue-700 font-semibold">Assigned: {active.assigned_to}</span>}
+                {active.status !== 'resolved' && <Button onClick={() => setStatus('resolved')} variant="outline" className="rounded-full h-8 px-4 text-xs border-emerald-300 text-emerald-700 hover:bg-emerald-50">Mark resolved</Button>}
+                {active.status === 'resolved' && <Button onClick={() => setStatus('open')} variant="outline" className="rounded-full h-8 px-4 text-xs">Reopen</Button>}
+              </div>
+            </div>
+            <div className="flex-1 overflow-y-auto p-5 space-y-3 bg-slate-50/40" data-testid="support-thread">
+              {messages.map((m, i) => (
+                <div key={i} className={`max-w-[80%] ${m.from_role === 'customer' ? 'ml-0' : 'ml-auto'}`}>
+                  <div className={`rounded-2xl px-4 py-2.5 text-sm whitespace-pre-line ${m.from_role === 'customer' ? 'bg-white border border-slate-200' : m.from_role === 'aria' ? 'bg-emerald-50 border border-emerald-200' : m.from_role === 'internal' ? 'bg-amber-50 border border-amber-200' : 'bg-emerald-700 text-white'}`}>
+                    {m.body}
+                  </div>
+                  <div className="text-[10.5px] text-slate-500 mt-1">{m.from_role} · {m.from_email} · {minsAgo(m.created_at)}</div>
+                </div>
+              ))}
+            </div>
+            <div className="border-t border-slate-200 p-3 flex gap-2">
+              <Input value={reply} onChange={(e) => setReply(e.target.value)} placeholder="Type your reply to the customer…" className="h-10" onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && send()} data-testid="support-reply-input" />
+              <Button onClick={send} disabled={!reply.trim() || sending} className="rounded-full bg-emerald-700 text-white h-10 px-5 text-xs">{sending ? 'Sending…' : 'Send'}</Button>
+            </div>
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
+

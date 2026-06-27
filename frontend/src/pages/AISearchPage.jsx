@@ -1,6 +1,8 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useSearchParams, useNavigate, Link } from 'react-router-dom';
-import { Sparkles, Search, ArrowRight, ShieldCheck, Globe2, Clock, Zap, ChevronDown } from 'lucide-react';
+import { Sparkles, Search, ArrowRight, ShieldCheck, Globe2, Clock, Zap } from 'lucide-react';
+import PageFAQ from '../components/PageFAQ';
+import { faqAi } from '../constants/pageFaqs';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import AISearch from '../components/AISearch';
@@ -231,24 +233,7 @@ export default function AISearchPage() {
           </div>
 
           <div className="max-w-[900px] mx-auto px-5 lg:px-8 mt-12">
-            <h2 className="font-display text-2xl lg:text-3xl font-semibold text-slate-900 text-center">AI Activity Search — Frequently Asked Questions</h2>
-            <div className="mt-6 space-y-3">
-              {[
-                { q: 'Which activities does the search cover?', a: 'All 12,719 published business activities across IFZA, DMCC, RAKEZ, SHAMS, SPC, ANCFZ, Meydan, DAFZA and 30+ other UAE jurisdictions including mainland DED codes.' },
-                { q: 'How is the cheapest freezone calculated?', a: 'We use the freezone’s own published base package for 1 visa and 1 activity. Service fees, add-ons and visa upgrades are calculated on the next step. The headline number is the licence + visa cost — never inflated.' },
-                { q: 'Will the same price apply when I actually pay?', a: 'Yes — pricing is read live from our verified database. If a freezone changes its published price we update within 24 hours. The checkout page shows the exact split between government fee and our service fee (AED 0 for first 500 founders).' },
-                { q: 'I do not see my activity — what do I do?', a: 'Type the closest synonym (e.g. "AI software" vs "Artificial intelligence consultancy"). Aria will still recommend a freezone. If we are unsure, we mark the result as "Activity confirmation needed" and our advisor will validate the DED / freezone code before payment.' },
-                { q: 'Is the activity code (ISIC) included?', a: 'Yes — every freezone activity is mapped to its DED / authority code and ISIC 4 industry group. You can download a free PDF report listing the code, the supported freezones and starting prices.' },
-              ].map((f, i) => (
-                <details key={i} className="card-elevated rounded-2xl p-5 group" data-testid={`ai-faq-${i}`}>
-                  <summary className="cursor-pointer flex items-center justify-between font-semibold text-slate-900">
-                    <span>{f.q}</span>
-                    <ChevronDown className="h-4 w-4 brand-emerald transition-transform group-open:rotate-180" />
-                  </summary>
-                  <p className="mt-3 text-sm text-slate-600 leading-relaxed">{f.a}</p>
-                </details>
-              ))}
-            </div>
+            <PageFAQ title="AI Activity Search — Frequently Asked Questions" intro="How our 12,719-activity index works, how the cheapest freezone is calculated, ISIC mapping and pricing accuracy." items={faqAi} testId="ai-faq" />
           </div>
         </section>
       )}

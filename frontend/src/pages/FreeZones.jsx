@@ -2,6 +2,8 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import PageFAQ from '../components/PageFAQ';
+import { faqFreezone } from '../constants/pageFaqs';
 import { ZONES, COMING_SOON_JURISDICTIONS } from '../data/zones';
 import { loadFreezonePackages, mergeZonesWithLivePackages } from '../lib/pricingService';
 import { Building2, Clock, Users2, Sparkles, Filter, ArrowUpRight, MapPin, LayoutGrid, List, Rows3, Maximize2 } from 'lucide-react';
@@ -232,6 +234,7 @@ export default function FreeZones() {
           </div>
         </div>
       </section>
+      <PageFAQ title="Free Zones — Common questions" intro="Cheapest UAE free zone, IFZA vs DMCC vs ANCFZ vs SHAMS, can you invoice mainland clients, remote incorporation, Corporate Tax for free zones." items={faqFreezone} testId="faq-freezones" />
       <Footer />
     </div>
   );

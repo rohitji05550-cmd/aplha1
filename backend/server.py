@@ -145,6 +145,14 @@ app.include_router(ocr_router)
 from photo import router as photo_router  # noqa: E402
 app.include_router(photo_router)
 
+# Admin live editor for freezone_packages (CRUD via Supabase service role)
+from admin_packages import router as admin_pkg_router  # noqa: E402
+app.include_router(admin_pkg_router)
+
+# Support tickets — Aria-first, live-agent-second
+from support import router as support_router  # noqa: E402
+app.include_router(support_router)
+
 # Founder portal lifecycle — progress / appointments / vault / compliance / renewals / invoices
 from lifecycle import router as lifecycle_router  # noqa: E402
 app.include_router(lifecycle_router)

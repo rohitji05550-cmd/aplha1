@@ -93,11 +93,47 @@ export default function About() {
       {/* WHY DIFFERENT */}
       <section className="py-16 bg-[#F8F3E8]">
         <div className="max-w-[1480px] mx-auto px-5 lg:px-8">
-          <div className="max-w-2xl">
+          <div className="max-w-3xl">
             <div className="text-[10px] uppercase tracking-[0.22em] font-bold brand-bronze">Why SmartSetupUAE.ae</div>
             <h2 className="mt-2 font-display text-2xl lg:text-4xl font-semibold text-slate-900">What makes us genuinely different</h2>
-            <p className="mt-3 text-slate-600 text-base">Pure neutrality, official prices, a real human advisor, lifelong compliance reminders — and the only AI-powered activity search in the UAE setup industry.</p>
+            <p className="mt-3 text-slate-600 text-base">Engineer's mindset, founder's empathy. We charge a transparent service fee — never a hidden freezone commission. Once you see how the industry actually works, you'll get it.</p>
           </div>
+
+          {/* HOW-WE-EARN explainer — turns the "no commission" promise into an
+              honest, easy-to-grasp story so the user gets it instantly. */}
+          <div className="mt-8 grid lg:grid-cols-[1.3fr_1fr] gap-5">
+            <div className="rounded-3xl bg-white border-2 border-emerald-200 p-6 lg:p-8">
+              <div className="text-[10px] uppercase tracking-[0.22em] font-bold brand-emerald">How we actually earn</div>
+              <h3 className="mt-2 font-display text-2xl font-semibold text-slate-900">Zero commission. One transparent fee. Once you see it, you get it.</h3>
+              <div className="mt-5 grid sm:grid-cols-2 gap-4 text-sm">
+                <div className="rounded-2xl bg-rose-50 border border-rose-200 p-4">
+                  <div className="text-[10px] uppercase tracking-wider font-bold text-rose-600">What the industry does</div>
+                  <div className="mt-1.5 font-semibold text-slate-900">Hidden 8–15% commission</div>
+                  <p className="mt-1.5 text-[12.5px] text-slate-600 leading-relaxed">A consultant quotes you AED 18,000 and quietly takes AED 2,200 from the freezone. The cheapest licence you saw becomes the cheapest commission, not the cheapest setup. That is why two consultants quote two different prices for the same activity.</p>
+                </div>
+                <div className="rounded-2xl bg-emerald-50 border border-emerald-200 p-4">
+                  <div className="text-[10px] uppercase tracking-wider font-bold brand-emerald">What we do</div>
+                  <div className="mt-1.5 font-semibold text-slate-900">Government fee + visible service fee</div>
+                  <p className="mt-1.5 text-[12.5px] text-slate-600 leading-relaxed">We show you the exact government / freezone fee, then add ONE transparent service fee (AED 0 for the first 500 founders · 5% after that · VAT 5% only once you cross AED 375 K turnover). No back-channel, no inflated starting prices, no surprises at renewal.</p>
+                </div>
+              </div>
+              <p className="mt-4 text-[12.5px] text-slate-500 leading-relaxed">If a freezone offered us a commission, we would publish it on this page. We don't — because we don't take any. The ranking on SmartSetupUAE.ae is therefore based purely on activity fit, total cost, setup speed and visa quota.</p>
+            </div>
+
+            <div className="rounded-3xl bg-[#0F2A2A] text-white p-6 lg:p-8">
+              <div className="text-[10px] uppercase tracking-[0.22em] font-bold text-[#F0C674]">Engineer&apos;s mindset</div>
+              <h3 className="mt-2 font-display text-2xl font-semibold">Why a nanotech engineer builds a setup platform</h3>
+              <p className="mt-3 text-[13px] text-white/80 leading-relaxed">
+                A nanotechnology researcher spends years on calibration — every number has to be measured, repeatable, and explainable to a peer. Pankaj brought that mindset to UAE business setup: every price you see on this site is a measurable, government-published number. Nothing is rounded up to make the consultant richer.
+              </p>
+              <ul className="mt-4 space-y-2 text-[13px] text-white/85">
+                <li className="flex gap-2"><span className="text-[#F0C674]">▹</span> Years in deep research with scientists from IIT Bombay, Amity University, NSIC, Rajasthan University and CCT.</li>
+                <li className="flex gap-2"><span className="text-[#F0C674]">▹</span> Years of helping businesses scale before relocating to the UAE.</li>
+                <li className="flex gap-2"><span className="text-[#F0C674]">▹</span> Saw the same opaque pricing problem he had solved for clients — applied the same rigour to fix it.</li>
+              </ul>
+            </div>
+          </div>
+
           <div className="mt-8 grid md:grid-cols-2 lg:grid-cols-4 gap-5">
             {VALUES.map((v, i) => (
               <div key={i} className="card-elevated rounded-2xl p-6">
