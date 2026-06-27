@@ -231,10 +231,31 @@ class ChatRequest(BaseModel):
     context: Optional[Dict[str, Any]] = None  # current page, selected zone, etc
 
 
+async def emergent_stream(system: str, user: str):
+    """Stream a reply via Emergent universal LLM key (Claude Sonnet 4.5 by default).
+
+    Falls back when the direct Gemini key is invalid / quota-exhausted."""
+    try:
+        chat = (LlmChat(
+            api_key=EMERGENT_LLM_KEY,
+            session_id=f"aria-{abs(hash(user)) % 10**9}",
+            system_message=system,
+        ).with_model("anthropic", "claude-sonnet-4-5-20250929"))
+        full_text = await chat.send_message(UserMessage(text=user))
+        # Stream in ~6-char chunks for a typing animation client-side
+        step = max(1, len(full_text) // 60)
+        for i in range(0, len(full_text), step):
+            yield {"delta": full_text[i:i + step]}
+    except Exception as exc:
+        yield {"error": f"Emergent stream failed: {exc}"}
+
+
 @router.post("/chat")
 async def chat_stream(req: ChatRequest):
-    if not GEMINI_API_KEY:
-        raise HTTPException(500, "GEMINI_API_KEY not configured. Get one free at https://aistudio.google.com/apikey")
+    # Pick provider: explicit LLM_PROVIDER override > Emergent (most reliable) > Gemini direct
+    use_emergent = bool(EMERGENT_LLM_KEY) and LLM_PROVIDER != "gemini"
+    if not use_emergent and not GEMINI_API_KEY:
+        raise HTTPException(500, "No LLM provider configured (set EMERGENT_LLM_KEY or GEMINI_API_KEY).")
 
     pricing = await _fetch_packages_snapshot()
     sys_msg = SYSTEM_PROMPT_TEMPLATE.format(pricing=pricing)
@@ -245,10 +266,19 @@ async def chat_stream(req: ChatRequest):
 
     async def event_generator():
         try:
-            async for ev in gemini_direct_stream(sys_msg, req.message):
+            generator = emergent_stream(sys_msg, req.message) if use_emergent else gemini_direct_stream(sys_msg, req.message)
+            async for ev in generator:
                 if "delta" in ev:
                     yield f"data: {json.dumps({'delta': ev['delta']})}\n\n"
                 elif "error" in ev:
+                    # If Emergent errored AND we have a Gemini key as backup, try once
+                    if use_emergent and GEMINI_API_KEY:
+                        async for ev2 in gemini_direct_stream(sys_msg, req.message):
+                            if "delta" in ev2:
+                                yield f"data: {json.dumps({'delta': ev2['delta']})}\n\n"
+                            elif "error" in ev2:
+                                yield f"data: {json.dumps({'error': ev2['error']})}\n\n"
+                        break
                     yield f"data: {json.dumps({'error': ev['error']})}\n\n"
             yield "data: [DONE]\n\n"
         except Exception as exc:

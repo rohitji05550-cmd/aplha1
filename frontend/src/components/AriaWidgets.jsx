@@ -309,7 +309,7 @@ export function WhatsAppFloatingButton() {
   );
 }
 
-export function LanguageSelector() {
+export function LanguageSelector({ idSuffix = '' }) {
   const { lang, setLang, langMeta } = useI18n();
   const [open, setOpen] = useState(false);
   return (
@@ -317,7 +317,7 @@ export function LanguageSelector() {
       <button
         onClick={() => setOpen((o) => !o)}
         className="inline-flex items-center gap-2 px-2.5 py-1.5 rounded-full text-[12.5px] font-medium text-slate-700 hover:bg-slate-100 transition-colors"
-        data-testid="lang-selector-button"
+        data-testid={`lang-selector-button${idSuffix}`}
         aria-label="Change language"
       >
         <img

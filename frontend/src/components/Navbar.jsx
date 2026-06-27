@@ -182,7 +182,7 @@ export default function Navbar() {
 
           {/* MOBILE TOGGLE + lang */}
           <div className="lg:hidden ml-auto flex items-center gap-2">
-            <LanguageSelector />
+            <LanguageSelector idSuffix="-mobile" />
             <button className="p-2 -mr-2" onClick={() => setOpen(!open)} aria-label="Menu" data-testid="nav-mobile-toggle">
               {open ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
