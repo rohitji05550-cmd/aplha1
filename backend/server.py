@@ -141,6 +141,10 @@ app.include_router(admin_users_router)
 from ocr import router as ocr_router  # noqa: E402
 app.include_router(ocr_router)
 
+# Selfie → passport-ready photo (Nano Banana)
+from photo import router as photo_router  # noqa: E402
+app.include_router(photo_router)
+
 # Founder portal lifecycle — progress / appointments / vault / compliance / renewals / invoices
 from lifecycle import router as lifecycle_router  # noqa: E402
 app.include_router(lifecycle_router)

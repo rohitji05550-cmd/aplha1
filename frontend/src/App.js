@@ -34,6 +34,7 @@ const AuthCallback = lazy(() => import('./pages/AuthCallback'));
 const Dashboard = lazy(() => import('./pages/Dashboard'));
 const AdminPanel = lazy(() => import('./pages/AdminPanel'));
 const Activities = lazy(() => import('./pages/Activities'));
+const PhotoStudio = lazy(() => import('./pages/PhotoStudio'));
 const HeroPreview = lazy(() => import('./pages/HeroPreview'));
 
 function useRevealOnScroll() {
@@ -188,6 +189,7 @@ function App() {
                   <Route path="/faqs" element={<FAQs />} />
                   <Route path="/founder-club" element={<FounderClub />} />
                   <Route path="/activities" element={<Activities />} />
+                  <Route path="/photo-studio" element={<PhotoStudio />} />
                   <Route path="/preview-hero" element={<HeroPreview />} />
                   <Route path="/blog" element={<Blog />} />
                   <Route path="/about" element={<About />} />

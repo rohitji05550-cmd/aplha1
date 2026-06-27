@@ -23,7 +23,32 @@ Founder reported a long list of UI / UX / functional issues to fix in this sessi
 
 ## 3. WHAT'S BEEN IMPLEMENTED IN THIS SESSION (2026-06-27)
 
+### ITERATION 3 — Admin redesign + AI Photo Studio + more width
+
+- **Admin Panel — full sidebar redesign** — replaced the horizontal tab strip with a modern control-tower layout:
+  - Dark teal sidebar (248 px, sticky) on the left with "Admin Console / Control Tower" header, your email, and 11 vertical nav items each with an icon, label and helper sub-text. Active tab highlights in amber-gold with left border accent.
+  - Content area fills the full remaining viewport (no max-width cap on admin) — no more side whitespace.
+  - New top header strip shows current section breadcrumb + Supabase sync indicator.
+  - AdminOverview redesigned: 7 colorful KPI cards in a single ribbon (emerald / blue / amber / violet / cyan / rose / teal) + Platform Actions bar + 3 shortcut cards.
+  - All 11 tabs still have `data-testid="admin-tab-*"`. Mobile <lg shows a horizontal tab strip; desktop shows the sidebar.
+- **Universal width pushed further** — global CSS now caps inner containers at `min(1560px, 96vw)` ≥ 1280px, `min(1720px, 95vw)` ≥ 1600px and 1820px on ≥ 1920px. Every page (Home, About, Compare, FreeZones, Golden Visa, FAQs, Blog) now fills the entire 1920px viewport with only ~50px gutters each side.
+- **AI Photo Studio (selfie → passport-ready photo)** — new route `/photo-studio` and reusable component `SelfieToPassport`:
+  - User can take a selfie via webcam OR upload an existing photo (up to 8 MB).
+  - Sends to new backend endpoint `POST /api/photo/passportize` which uses **Gemini Nano Banana** (`gemini-3.1-flash-image-preview`) via the Emergent universal LLM key.
+  - AI removes background, applies pure white, re-frames shoulders-up, applies studio lighting, returns base64 PNG.
+  - Side-by-side preview (original vs passport-ready), "Use this photo" / "Download" / "Try another" buttons.
+  - Fallback: a clearly-visible "Skip — I'll upload my own" link so users who prefer manual submission can route to /dashboard?tab=documents.
+  - Trust strip: UAE-compliant · Identity-safe · Private (photos not stored, processed in memory).
+
 ### ITERATION 2 — Universal UI fixes (after first user feedback round)
+- **Universal page width** — global CSS expands every Tailwind `max-w-3xl/4xl/5xl/6xl/7xl` plus bulk-edit of every page that used hard-coded narrow widths.
+- **Universal hero-to-navbar gap** — global CSS sets `section.hero-gradient` padding-top to 0; inner padding-top ~12-20px.
+- **Stat cards enlarged** — home page stats use 2xl/[1.85rem] fonts.
+- **Home tagline rewritten** — new badge: "UAE's First AI Concierge for Founders · Built by a founder, for founders". Trust strip: "Zero commission · Official UAE pricing · Free for first 500 founders · Lic 262843696888".
+- **Golden Visa hero** font reduced (clamp 1.9–3.2rem) — entire hero now fits in one viewport.
+- **Real founder bio** — Pankaj described as a nanotechnology engineer who worked with IIT Bombay, Amity, NSIC, Rajasthan University and CCT. Title: "Founder · Engineer · Researcher". Removed fake "15+ years UAE corporate licensing" claim.
+- **Admin Panel — Payment Proofs tab** implemented (was missing, causing crash).
+- **Founder Club FAQ** clarified pricing (free first 500 → 5% after; VAT only after AED 375K).
 - **Universal page width** — added a global CSS override that expands every Tailwind `max-w-3xl/4xl/5xl/6xl/7xl` to 1480px on screens ≥ 1280px and 1640px on ≥ 1600px. Plus bulk-edited every page that used hard-coded `max-w-[1100px]/[1200px]/[1280px]/[1400px]/[1380px]` to `max-w-[1480px]`. Pages no longer have the "phone on desktop" empty side margins.
 - **Universal hero-to-navbar gap** — global CSS sets `section.hero-gradient` padding-top to 0 and the inner container padding-top to ~12-20px. All pages now show the hero immediately after the navbar (was 60-100px gap before).
 - **Home tagline** rewritten — old "No sign-up required / Free to use / Results in 30 seconds" replaced with "Zero commission from any freezone · Official UAE government pricing · Free for the first 500 founders · Axiscrest-Global FZE LLC · Lic 262843696888". Hero badge says "UAE's First AI Concierge for Founders · Built by a founder, for founders" (no longer mimics setupuae.ai phrasing).

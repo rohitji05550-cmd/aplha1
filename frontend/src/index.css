@@ -319,7 +319,7 @@ html[dir="rtl"] [data-testid="ai-search-hero-input"] {
   .max-w-5xl,
   .max-w-6xl,
   .max-w-7xl {
-    max-width: 1480px !important;
+    max-width: min(1560px, 96vw) !important;
   }
 }
 @media (min-width: 1600px) {
@@ -328,7 +328,16 @@ html[dir="rtl"] [data-testid="ai-search-hero-input"] {
   .max-w-5xl,
   .max-w-6xl,
   .max-w-7xl {
-    max-width: 1640px !important;
+    max-width: min(1720px, 95vw) !important;
+  }
+}
+@media (min-width: 1920px) {
+  .max-w-3xl,
+  .max-w-4xl,
+  .max-w-5xl,
+  .max-w-6xl,
+  .max-w-7xl {
+    max-width: 1820px !important;
   }
 }
 

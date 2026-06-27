@@ -193,43 +193,90 @@ export default function AdminPanel() {
   const allLeads = [...leads, ...localLeads.map((l, i) => ({ id: `local-${i}`, ...l, local_only: true }))];
 
   return (
-    <div>
+    <div className="bg-[#0F172A] min-h-screen">
       <Navbar />
-      <section className="hero-gradient grain">
-        <div className="max-w-7xl mx-auto px-5 lg:px-8 pt-3 lg:pt-6 pb-9">
-          <div className="text-[12px] uppercase tracking-[0.22em] text-slate-500 font-semibold">Admin Panel</div>
-          <h1 className="mt-3 font-display font-semibold text-slate-900" style={{ fontSize: 'clamp(2.4rem, 4.4vw, 4rem)', lineHeight: 1.05 }}>Control tower — leads, orders &amp; ops.</h1>
-          <p className="mt-3 text-slate-600 max-w-3xl" style={{ fontSize: 'clamp(1rem, 1.15vw, 1.125rem)' }}>Real-time KPIs · 50+ live leads · multi-currency payments · 12,719 indexed activities · 91 freezone packages. All synced with Supabase smrsaedmuaizlesehpee.</p>
-          <div className="mt-6 flex flex-wrap gap-2">
-            {[
-              ['overview', 'Overview'],
-              ['leads', 'Leads'],
-              ['orders', 'Orders'],
-              ['coupons', 'Coupons'],
-              ['memberships', 'Memberships'],
-              ['kyc', 'KYC'],
-              ['payments', 'Payment Proofs'],
-              ['pricing', 'Pricing'],
-              ['activities', 'Activities'],
-              ['roles', 'Roles'],
-              ['team', 'Team'],
-            ].map(([k, label]) => (
-              <Button
-                key={k}
-                onClick={() => setTab(k)}
-                variant={tab === k ? 'default' : 'outline'}
-                className="rounded-full px-4 h-10 text-xs"
-                data-testid={`admin-tab-${k}`}
-              >
-                {label}
-              </Button>
-            ))}
+      {/* SIDEBAR + CONTENT shell — full viewport width, no max-width cap */}
+      <div className="flex pt-[68px]" data-testid="admin-shell">
+        {/* SIDEBAR */}
+        <aside className="hidden lg:flex flex-col w-[248px] shrink-0 bg-[#0F2A2A] text-white border-r border-white/10 h-[calc(100vh-68px)] sticky top-[68px] overflow-y-auto">
+          <div className="px-5 py-5 border-b border-white/10">
+            <div className="text-[10px] uppercase tracking-[0.22em] text-[#F0C674] font-bold">Admin Console</div>
+            <div className="mt-1 font-display text-lg font-semibold leading-tight">Control Tower</div>
+            <div className="mt-1 text-[11px] text-white/55">{user.email}</div>
           </div>
-        </div>
-      </section>
+          <nav className="flex-1 py-3 space-y-0.5">
+            {[
+              { k: 'overview',    label: 'Overview',      i: '◎', meta: 'KPIs · stats' },
+              { k: 'leads',       label: 'Leads',         i: '✿', meta: 'Captured enquiries' },
+              { k: 'orders',      label: 'Orders',        i: '◈', meta: 'Stripe + bank' },
+              { k: 'coupons',     label: 'Coupons',       i: '%',  meta: 'Promo codes' },
+              { k: 'memberships', label: 'Memberships',   i: '★', meta: 'Founder club' },
+              { k: 'kyc',         label: 'KYC',           i: '⛨', meta: 'Identity reviews' },
+              { k: 'payments',    label: 'Payment Proofs',i: '◉', meta: 'Bank transfers' },
+              { k: 'pricing',     label: 'Pricing',       i: '◧', meta: 'Freezone packages' },
+              { k: 'activities',  label: 'Activities',    i: '☷', meta: '12K+ master list' },
+              { k: 'roles',       label: 'Roles',         i: '◭', meta: 'RBAC matrix' },
+              { k: 'team',        label: 'Team',          i: '◐', meta: 'Internal users' },
+            ].map((item) => (
+              <button
+                key={item.k}
+                onClick={() => setTab(item.k)}
+                data-testid={`admin-tab-${item.k}`}
+                className={`w-full text-left flex items-center gap-3 px-5 py-2.5 transition-colors border-l-2 ${
+                  tab === item.k
+                    ? 'bg-[#F0C674]/10 border-[#F0C674] text-white'
+                    : 'border-transparent text-white/65 hover:text-white hover:bg-white/5'
+                }`}
+              >
+                <span className={`text-base ${tab === item.k ? 'text-[#F0C674]' : 'text-white/40'}`}>{item.i}</span>
+                <div className="flex-1 min-w-0">
+                  <div className="text-[13.5px] font-semibold">{item.label}</div>
+                  <div className="text-[10.5px] text-white/40">{item.meta}</div>
+                </div>
+                {tab === item.k && <span className="text-[#F0C674]">›</span>}
+              </button>
+            ))}
+          </nav>
+          <div className="mt-auto p-4 border-t border-white/10">
+            <div className="text-[10px] uppercase tracking-[0.22em] text-white/40 font-semibold">Logged in as</div>
+            <div className="mt-1 text-sm font-semibold capitalize">{user.role}</div>
+            <Button onClick={() => navigate('/dashboard')} variant="outline" className="mt-3 w-full h-9 text-xs rounded-full border-white/20 text-white hover:bg-white/10">← Go to dashboard</Button>
+          </div>
+        </aside>
 
-      <section className="bg-white py-10">
-        <div className="max-w-7xl mx-auto px-5 lg:px-8 space-y-6">
+        {/* CONTENT */}
+        <main className="flex-1 min-w-0 bg-[#F4F6FB]">
+          {/* Mobile tab strip (visible only < lg) */}
+          <div className="lg:hidden bg-white border-b border-slate-200 px-4 py-3 overflow-x-auto">
+            <div className="flex gap-2 whitespace-nowrap">
+              {['overview','leads','orders','coupons','memberships','kyc','payments','pricing','activities','roles','team'].map((k) => (
+                <Button key={k} size="sm" onClick={() => setTab(k)} variant={tab === k ? 'default' : 'outline'} className="rounded-full px-3 h-8 text-[11px] capitalize">{k}</Button>
+              ))}
+            </div>
+          </div>
+
+          {/* Top header strip */}
+          <header className="bg-white border-b border-slate-200 px-6 lg:px-10 py-5 flex items-center justify-between gap-4 flex-wrap" data-testid="admin-header">
+            <div>
+              <div className="text-[11px] uppercase tracking-[0.22em] font-bold text-slate-500">{tab.toUpperCase()}</div>
+              <h1 className="mt-1 font-display text-2xl font-semibold text-slate-900">
+                {tab === 'overview' && 'Platform overview'}
+                {tab === 'leads' && 'Captured leads'}
+                {tab === 'orders' && 'Orders'}
+                {tab === 'coupons' && 'Coupons & promos'}
+                {tab === 'memberships' && 'Founder Club memberships'}
+                {tab === 'kyc' && 'KYC reviews'}
+                {tab === 'payments' && 'Bank-transfer payment proofs'}
+                {tab === 'pricing' && 'Freezone pricing'}
+                {tab === 'activities' && 'Activities master'}
+                {tab === 'roles' && 'Role & permission matrix'}
+                {tab === 'team' && 'Team & access'}
+              </h1>
+            </div>
+            <div className="text-xs text-slate-500">Synced with Supabase · <span className="text-emerald-700 font-semibold">smrsaedmuaizlesehpee</span></div>
+          </header>
+
+          <div className="px-6 lg:px-10 py-6 space-y-6">
           {tab === 'overview' && <AdminOverview />}
           {tab === 'leads' && (
             <div className="card-elevated rounded-3xl p-7">
@@ -615,8 +662,9 @@ export default function AdminPanel() {
               </div>
             </div>
           )}
-        </div>
-      </section>
+          </div>
+        </main>
+      </div>
       <Footer />
     </div>
   );
@@ -655,38 +703,67 @@ function AdminOverview() {
   };
 
   const cards = stats ? [
-    { l: 'Leads (total)',         n: stats.leads.total, sub: `${stats.leads.new} new · ${stats.leads.converted} converted` },
-    { l: 'Orders',                n: stats.orders.total, sub: `${stats.orders.paid} paid` },
-    { l: 'Founder Club Members',  n: stats.founder_club.active, sub: 'Active' },
-    { l: 'Freezone Packages',     n: stats.freezone_packages, sub: 'Live · across 10 zones' },
-    { l: 'Activities Master',     n: stats.activities, sub: 'Searchable' },
-    { l: 'Golden Visa Leads',     n: stats.golden_visa_leads, sub: 'Via /golden-visa form' },
-    { l: 'Appointments',          n: stats.appointments, sub: 'Medical · Bio · Stamping' },
+    { l: 'Total Leads',           n: stats.leads.total, sub: `${stats.leads.new} new · ${stats.leads.converted} converted`, color: 'emerald', icon: '✿' },
+    { l: 'Orders',                n: stats.orders.total, sub: `${stats.orders.paid} paid`, color: 'blue', icon: '◈' },
+    { l: 'Founder Club',          n: stats.founder_club.active, sub: 'Active members', color: 'amber', icon: '★' },
+    { l: 'Freezone Packages',     n: stats.freezone_packages, sub: 'Live · across 10 zones', color: 'violet', icon: '◧' },
+    { l: 'Activities Master',     n: stats.activities, sub: 'Searchable', color: 'cyan', icon: '☷' },
+    { l: 'Golden Visa Leads',     n: stats.golden_visa_leads, sub: 'Via /golden-visa form', color: 'rose', icon: '⛨' },
+    { l: 'Appointments',          n: stats.appointments, sub: 'Medical · Bio · Stamping', color: 'teal', icon: '◐' },
   ] : [];
+
+  const colorClasses = {
+    emerald: 'bg-emerald-50 text-emerald-700 border-emerald-200',
+    blue:    'bg-blue-50    text-blue-700    border-blue-200',
+    amber:   'bg-amber-50   text-amber-700   border-amber-200',
+    violet:  'bg-violet-50  text-violet-700  border-violet-200',
+    cyan:    'bg-cyan-50    text-cyan-700    border-cyan-200',
+    rose:    'bg-rose-50    text-rose-700    border-rose-200',
+    teal:    'bg-teal-50    text-teal-700    border-teal-200',
+  };
 
   return (
     <div className="space-y-6" data-testid="admin-overview">
-      <div className="card-elevated rounded-3xl p-7">
-        <div className="flex items-center justify-between gap-3 flex-wrap">
-          <div>
-            <div className="text-xs uppercase tracking-[0.22em] font-semibold text-slate-500">Platform KPIs</div>
-            <div className="mt-1 font-display text-2xl font-semibold text-slate-900">SmartSetupUAE Control Tower</div>
-          </div>
-          <div className="flex gap-2">
-            <Button onClick={seed} disabled={seeding} className="rounded-full px-4 h-9 text-xs bg-emerald-700 text-white hover:bg-emerald-800" data-testid="admin-seed-dummy">{seeding ? 'Seeding…' : 'Seed 50 dummy leads + companies'}</Button>
-            <Button onClick={cleanup} variant="outline" className="rounded-full px-4 h-9 text-xs" data-testid="admin-cleanup-dummy">Delete TEST_DATA</Button>
-            <Button onClick={load} variant="outline" className="rounded-full px-4 h-9 text-xs">Refresh</Button>
-          </div>
-        </div>
-        <div className="mt-6 grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
-          {cards.map((c) => (
-            <div key={c.l} className="p-4 rounded-2xl bg-slate-50 border border-slate-200">
-              <div className="text-[10px] uppercase tracking-wider font-semibold text-slate-500">{c.l}</div>
-              <div className="font-display text-3xl font-bold text-slate-900 mt-1">{Number(c.n).toLocaleString()}</div>
-              <div className="text-[11px] text-slate-500 mt-0.5">{c.sub}</div>
+      {/* TOP STATS RIBBON */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-3" data-testid="admin-kpi-grid">
+        {cards.map((c) => (
+          <div key={c.l} className="bg-white rounded-2xl border border-slate-200 p-4 hover:shadow-lg hover:-translate-y-0.5 transition-all">
+            <div className="flex items-start justify-between">
+              <div className="text-[10px] uppercase tracking-wider font-bold text-slate-500">{c.l}</div>
+              <span className={`h-7 w-7 rounded-lg grid place-items-center text-sm border ${colorClasses[c.color]}`}>{c.icon}</span>
             </div>
-          ))}
+            <div className="font-display text-[1.75rem] font-bold text-slate-900 mt-2 leading-none">{Number(c.n).toLocaleString()}</div>
+            <div className="text-[11px] text-slate-500 mt-1.5 truncate">{c.sub}</div>
+          </div>
+        ))}
+      </div>
+
+      {/* ACTIONS BAR */}
+      <div className="bg-white rounded-2xl border border-slate-200 p-5 flex items-center justify-between gap-3 flex-wrap">
+        <div>
+          <div className="text-[11px] uppercase tracking-[0.22em] font-bold text-slate-500">Platform actions</div>
+          <div className="mt-1 text-sm text-slate-700">Quickly seed test data or refresh KPIs. All Supabase rows tagged <code className="text-xs bg-slate-100 px-1.5 py-0.5 rounded">TEST_DATA</code>.</div>
         </div>
+        <div className="flex gap-2 flex-wrap">
+          <Button onClick={seed} disabled={seeding} className="rounded-full px-4 h-9 text-xs bg-emerald-700 text-white hover:bg-emerald-800" data-testid="admin-seed-dummy">{seeding ? 'Seeding…' : 'Seed 50 dummy leads'}</Button>
+          <Button onClick={cleanup} variant="outline" className="rounded-full px-4 h-9 text-xs" data-testid="admin-cleanup-dummy">Delete TEST_DATA</Button>
+          <Button onClick={load} variant="outline" className="rounded-full px-4 h-9 text-xs">↻ Refresh</Button>
+        </div>
+      </div>
+
+      {/* SHORTCUTS */}
+      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+        {[
+          { l: 'Add freezone package', d: 'Insert a new package row into Supabase pricing master.', cta: 'Pricing tab →', click: () => null },
+          { l: 'Approve KYC',          d: `${stats?.leads?.new || 0} new identity reviews pending.`, cta: 'KYC tab →', click: () => null },
+          { l: 'Review payment proofs', d: 'Manually verify any bank-transfer screenshots.', cta: 'Payment Proofs →', click: () => null },
+        ].map((s) => (
+          <div key={s.l} className="bg-white rounded-2xl border border-slate-200 p-5 hover:shadow-md transition-shadow">
+            <div className="font-semibold text-slate-900">{s.l}</div>
+            <div className="mt-1.5 text-xs text-slate-600 leading-relaxed">{s.d}</div>
+            <div className="mt-3 text-[12px] font-semibold text-emerald-700">{s.cta}</div>
+          </div>
+        ))}
       </div>
     </div>
   );
